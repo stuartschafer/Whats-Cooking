@@ -1,12 +1,13 @@
 function michael() {
-	// test
+    // test
 }
 
 function stuart() {
-	This is what I'm adding
+    This is what I 'm adding
 }
 
 function adrian() {
     This is my test 1
     This is my test 2
+    This is my test 3
 }
