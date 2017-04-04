@@ -9,7 +9,7 @@
 	<!-- JQuery link -->
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<!-- JS link -->
-	<script type="text/javascript" src="assets/javascript/app.js"></script>
+	<script type="text/javascript" src="../javascript/app.js"></script>
 	<!-- Material link (for CSS/new technology/library) -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
 
@@ -38,9 +38,66 @@
       </ul>
     </div>
   </nav>
-  <div id="test1" class="col s12">Stuff</div>
-  <div id="test2" class="col s12">Stuff here too</div>
-  <div id="test3" class="col s12">Stuff here as well</div>
 
+<div id="pantryItems">
+</div>
+
+  <!-- <form action="#">
+    <p>
+      <input type="checkbox" id="item1">
+      <label for="item1">Bread</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item2">
+      <label for="item2">Apples</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item3">
+      <label for="item3">Chicken</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item4">
+      <label for="item4">Butter</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item5">
+      <label for="item5">Sugar</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item6">
+      <label for="item6">Groundf Beef</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item7">
+      <label for="item7">Cabbage</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item8">
+      <label for="item8">Rice</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item9">
+      <label for="item9">Green Beans</label>
+    </p>
+    <p>
+      <input type="checkbox" id="item10">
+      <label for="item10">Milk</label>
+    </p>
+  </form> -->
+
+<script>
+
+var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
+
+for (var i = 0; i < pantry.length; i++) {
+  var selection = $('<input type="checkbox" id="item' + i + '">');
+  selection.attr("for", "item" + i);
+  var pantrySelection = $("<div>");
+  $(pantrySelection).append(selection, pantry[i]);
+  $("#pantryItems").append(pantrySelection);
+}
+
+
+</script>
 </body>
 </html>
