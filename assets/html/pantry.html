@@ -1,48 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>What's Cooking</title>
+    <meta charset="UTF-8">
+    <title>What's Cooking</title>
 </head>
 
-	
-	<!-- JQuery link -->
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<!-- JS link -->
-	<script type="text/javascript" src="../javascript/app.js"></script>
-	<!-- Material link (for CSS/new technology/library) -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+
+<!-- JQuery link -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<!-- JS link -->
+<script type="text/javascript" src="../javascript/app.js"></script>
+<!-- Material link (for CSS/new technology/library) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
 
 <body>
 
-<nav class="nav-extended panel #9575cd deep-purple lighten-2">
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo">What's Cookin'?</a>
-      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="sass.html">Home</a></li>
-        <li><a href="badges.html">Pantry</a></li>
-        <li><a href="collapsible.html">Recipes</a></li>
-      </ul>
-      <ul class="side-nav" id="mobile-demo">
-        <li><a href="sass.html">Sass</a></li>
-        <li><a href="badges.html">Components</a></li>
-        <li><a href="collapsible.html">JavaScript</a></li>
-      </ul>
-    </div>
-    <div class="nav-content">
-      <ul class="tabs tabs-transparent">
-        <li class="tab"><a class="active" href="#area1">Active link</a></li>
-        <li class="tab"><a href="#area2">Link 2</a></li>
-        <li class="tab"><a href="#area3">Link 3</a></li>
-      </ul>
-    </div>
-  </nav>
+    <nav class="nav-extended panel #9575cd deep-purple lighten-2">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">What's Cookin'?</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Home</a></li>
+                <li><a href="badges.html">Pantry</a></li>
+                <li><a href="collapsible.html">Recipes</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a class="active" href="#area1">Active link</a></li>
+                <li class="tab"><a href="#area2">Link 2</a></li>
+                <li class="tab"><a href="#area3">Link 3</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<div id="pantryItems">
-</div>
+    <div id="pantryItems">
+    </div>
 
-  <!-- <form action="#">
+    <!-- <form action="#">
     <p>
       <input type="checkbox" id="item1">
       <label for="item1">Bread</label>
@@ -85,19 +86,38 @@
     </p>
   </form> -->
 
-<script>
+    <script>
+        var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
 
-var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
+        function displayPantry(pantry) {
+            var parent = $("#pantryItems");
 
-for (var i = 0; i < pantry.length; i++) {
-  var selection = $('<input type="checkbox" id="item' + i + '">');
-  selection.attr("for", "item" + i);
-  var pantrySelection = $("<div>");
-  $(pantrySelection).append(selection, pantry[i]);
-  $("#pantryItems").append(pantrySelection);
-}
+            for (var i = 0; i < pantry.length; i++) {
+                var checkbox = $("<div>")
+                var input = $("<input>");
+                $(input).attr("type", "checkbox");
+                $(input).attr("id", "item" + i);
+                $(input).attr("name", pantry[i]);
+                var label = $("<label>");
+                $(label).attr("for", "item" + i);
+                $(label).text(pantry[i]);
+                $(checkbox).append(input);
+                $(checkbox).append(label);
+                $(parent).append(checkbox);
+            }
+        }
 
 
-</script>
+        function getIngredients() {
+            var arrIngred = []
+            var checkedButtons = $("input[id^='item']:checked");
+            for (var i = 0; i < checkedButtons.length; i++) {
+                arrIngred.push(checkedButtons[i].name);
+            }
+            return arrIngred
+        }
+        displayPantry(pantry);
+    </script>
 </body>
+
 </html>
