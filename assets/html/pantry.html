@@ -10,9 +10,11 @@
 <!-- JQuery link -->
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <!-- JS link -->
-<script type="text/javascript" src="../javascript/app.js"></script>
+<!-- <script type="text/javascript" src="../javascript/app.js"></script> -->
 <!-- Material link (for CSS/new technology/library) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+<!-- Link to firebase -->
+<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
 
 <body>
 
@@ -40,101 +42,117 @@
         </div>
     </nav>
 
-    <div id="pantryItems">
+    <div class="row center-align">
+
+      <!-- This section is for Pandora's pantry -->
+      <div class="col s3" style="background-color: yellow">
+        <span class="flow-text">Pandora's Pantry</span>
+        <div id="pandorasPantryItems" class="left-align"></div>
+      </div>
+
+      <!-- This section is for all items available in storage -->
+      <div class="col s9" style="background-color: cyan">
+        <span class="flow-text">Available Ingredients</span>
+      <div id="storageItems" class="left-align"></div>
+      <button class="btn waves-effect waves-light" type="submit" name="action" id="addToMyPantry">Add to My Pantry</button>
+      </div>
+
     </div>
 
-<<<<<<< Updated upstream
-    <!-- <form action="#">
-=======
-  <form action="#">
->>>>>>> Stashed changes
-    <p>
-      <input type="checkbox" id="item1">
-      <label for="item1">Bread</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item2">
-      <label for="item2">Apples</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item3">
-      <label for="item3">Chicken</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item4">
-      <label for="item4">Butter</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item5">
-      <label for="item5">Sugar</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item6">
-      <label for="item6">Groundf Beef</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item7">
-      <label for="item7">Cabbage</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item8">
-      <label for="item8">Rice</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item9">
-      <label for="item9">Green Beans</label>
-    </p>
-    <p>
-      <input type="checkbox" id="item10">
-      <label for="item10">Milk</label>
-    </p>
-  </form>
-
-<<<<<<< Updated upstream
-    <script>
-        var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
-        function displayPantry(pantry) {
-            var parent = $("#pantryItems");
-            for (var i = 0; i < pantry.length; i++) {
-                var checkbox = $("<div>")
-                var input = $("<input>");
-                $(input).attr("type", "checkbox");
-                $(input).attr("id", "item" + i);
-                $(input).attr("name", pantry[i]);
-                var label = $("<label>");
-                $(label).attr("for", "item" + i);
-                $(label).text(pantry[i]);
-                $(checkbox).append(input);
-                $(checkbox).append(label);
-                $(parent).append(checkbox);
-            }
-        }
-        function getIngredients() {
-            var arrIngred = []
-            var checkedButtons = $("input[id^='item']:checked");
-            for (var i = 0; i < checkedButtons.length; i++) {
-                arrIngred.push(checkedButtons[i].name);
-            }
-            return arrIngred
-        }
-        displayPantry(pantry);
-    </script>
-=======
-<!-- <script>
-
-var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
-
-for (var i = 0; i < pantry.length; i++) {
-  var selection = $('<input>');
-  selection.attr("type", "checkbox").attr("id", "item" + i);
-  var pantrySelection = $("<div>");
-  $(pantrySelection).append(selection);
-  $("#pantryItems").append(pantrySelection);
-}
-
-
-</script> -->
->>>>>>> Stashed changes
 </body>
 
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
+    authDomain: "whatscooking-cb33d.firebaseapp.com",
+    databaseURL: "https://whatscooking-cb33d.firebaseio.com",
+    projectId: "whatscooking-cb33d",
+    storageBucket: "whatscooking-cb33d.appspot.com",
+    messagingSenderId: "296059627382"
+  };
+  firebase.initializeApp(config);
+
+  // Sets inital variables
+  var database = firebase.database();
+  var storage = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
+  var pantry = [];
+  var addToPandorasPantry = [];
+
+  // This displays the storage items on the right-hand side of the page.
+  // If a pantry item is on the left, then it will not show up on the right.
+  function displayStorage(pantry) {
+    var parent = $("#storageItems");
+    for (var i = 0; i < storage.length; i++) {
+      if( $.inArray(storage[i], addToPandorasPantry) !== -1 ) {}
+      else {
+        var checkbox = $("<div>")
+        var input = $("<input>");
+        $(input).attr("type", "checkbox");
+        $(input).attr("id", "item" + i);
+        $(input).attr("name", pantry[i]);
+        var label = $("<label>");
+        $(label).attr("for", "item" + i);
+        $(label).text(pantry[i]);
+        $(checkbox).append(input);
+        $(checkbox).append(label);
+        $(parent).append(checkbox); }
+    }
+  };
+
+  
+
+database.ref().on("value", function(snapshot) {
+
+  // This tests to make sure there is something in the firebase.
+  if ( snapshot.child("pantry").exists() ) {
+    displayPandorasPantry(pantry);
+    displayStorage(storage); }
+  else { var addToPandorasPantry = [];
+        arrIngred = [];
+        displayStorage(storage); }
+});
+
+  function goIntoPantry() {
+    var arrIngred = [];
+    var newIngred = [];
+    var checkedButtons = $("input[id^='item']:checked");
+
+    for (var i = 0; i < checkedButtons.length; i++) {
+      arrIngred.push(checkedButtons[i].name);
+    }
+    // This combines the firebase array with the new array from what the user selected.
+    var newArray = arrIngred.concat(addToPandorasPantry);
+    // This sets the new array in firebase
+    database.ref().set({ pantry: newArray });
+    // This reloads the page to display the pantry and storage items correctly.
+    location.reload();
+  }
+
+  // This displays Pandora's pantry items on the left-hand side of the page.
+  // Any item in the pantry will not be displayed on the storage section (right-hand side).
+  function displayPandorasPantry(pantry) {
+    database.ref().on("value", function(snapshot) {
+    addToPandorasPantry = snapshot.val().pantry;
+     
+    for (var j = 0; j < addToPandorasPantry.length; j++) {
+      var parent2 = $("#pandorasPantryItems");
+      var checkbox2 = $("<div>")
+      var label2 = $("<label>");
+      $(label2).css({"line-height":"25px","font-size":"1rem"});
+      $(label2).text(addToPandorasPantry[j]);
+      $(checkbox2).append(label2);
+      $(parent2).append(checkbox2);
+    }
+  });
+}
+
+// This runs when the user selects some items and presses the "Add to My Pantry" button.
+// Might add a modal later on if the user does not select anything.
+$("#addToMyPantry").on("click", function(event) {
+    goIntoPantry();
+});
+
+</script>
+</body>
 </html>
