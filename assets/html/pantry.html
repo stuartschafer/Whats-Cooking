@@ -43,7 +43,11 @@
     <div id="pantryItems">
     </div>
 
+<<<<<<< Updated upstream
     <!-- <form action="#">
+=======
+  <form action="#">
+>>>>>>> Stashed changes
     <p>
       <input type="checkbox" id="item1">
       <label for="item1">Bread</label>
@@ -84,8 +88,9 @@
       <input type="checkbox" id="item10">
       <label for="item10">Milk</label>
     </p>
-  </form> -->
+  </form>
 
+<<<<<<< Updated upstream
     <script>
         var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
         function displayPantry(pantry) {
@@ -114,6 +119,22 @@
         }
         displayPantry(pantry);
     </script>
+=======
+<!-- <script>
+
+var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
+
+for (var i = 0; i < pantry.length; i++) {
+  var selection = $('<input>');
+  selection.attr("type", "checkbox").attr("id", "item" + i);
+  var pantrySelection = $("<div>");
+  $(pantrySelection).append(selection);
+  $("#pantryItems").append(pantrySelection);
+}
+
+
+</script> -->
+>>>>>>> Stashed changes
 </body>
 
 </html>
