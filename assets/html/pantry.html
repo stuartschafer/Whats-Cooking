@@ -88,10 +88,8 @@
 
     <script>
         var pantry = ["Bread", "Apples", "Chicken", "Butter", "Sugar", "Ground Beef", "Cabbage", "Rice", "Green Beans", "Milk"];
-
         function displayPantry(pantry) {
             var parent = $("#pantryItems");
-
             for (var i = 0; i < pantry.length; i++) {
                 var checkbox = $("<div>")
                 var input = $("<input>");
@@ -106,8 +104,6 @@
                 $(parent).append(checkbox);
             }
         }
-
-
         function getIngredients() {
             var arrIngred = []
             var checkedButtons = $("input[id^='item']:checked");
