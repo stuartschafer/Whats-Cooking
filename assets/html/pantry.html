@@ -146,6 +146,7 @@ database.ref().on("value", function(snapshot) {
   function displayPandorasPantry(pantry) {
     database.ref().on("value", function(snapshot) {
     addToPandorasPantry = snapshot.val().pantry;
+    addToPandorasPantry = addToPandorasPantry.sort();
      
     for (var j = 0; j < addToPandorasPantry.length; j++) {
       var parent2 = $("#pandorasPantryItems");
