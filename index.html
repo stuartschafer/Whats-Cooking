@@ -40,10 +40,8 @@
     <div class="section">
 
       <div class="row">
-        <div class="col s12 m4">
-          <ul class="collection">
+        <div class="col s12 m4" id="pandorasPantryItems">
 
-          </ul>
         </div>
       </div>
 
@@ -71,9 +69,51 @@
   <!-- local JS -->
   <script>
     var database = firebase.database();
-  </script>
-</body>
-</html>
+    var pantry = [];
+
+    displayPandorasPantry(pantry);
+
+    function displayPandorasPantry(pantry) {
+      database.ref().on("value", function(snapshot) {
+        addToPandorasPantry = snapshot.val().pantry;
+        addToPandorasPantry = addToPandorasPantry.sort();
+
+        for (var j = 0; j < addToPandorasPantry.length; j++) {
+          var parent2 = $("#pandorasPantryItems");
+          var checkbox2 = $("<div>");
+          $(input).attr("type", "checkbox");
+          $(input).attr("id", "item" + j);
+          $(input).attr("name", pantry[j]);
+          var label2 = $("<label>");
+          $(label2).css({"line-height":"25px","font-size":"1rem"});
+          $(label2).text(addToPandorasPantry[j]);
+          $(checkbox).append(input);
+          $(checkbox2).append(label2);
+          $(parent2).append(checkbox2);
+        }
+      });
+    }
+    // function displayPandorasPantry(pantry) {
+    //   var parent = $("#pandorasPantryItems");
+    //   for (var i = 0; i < pantry.length; i++) {
+    //     if( $.inArray(pantry[i], addToPandorasPantry) !== -1 ) {}
+    //       else {
+    //         var checkbox = $("<div>");
+    //         var input = $("<input>");
+    //         $(input).attr("type", "checkbox");
+    //         $(input).attr("id", "item" + i);
+    //         $(input).attr("name", pantry[i]);
+    //         var label = $("<label>");
+    //         $(label).attr("for", "item" + i);
+    //         $(label).text(pantry[i]);
+    //         $(checkbox).append(input);
+    //         $(checkbox).append(label);
+    //         $(parent).append(checkbox); }
+    //       }
+    //     }
+      </script>
+    </body>
+    </html>
 
 
 
