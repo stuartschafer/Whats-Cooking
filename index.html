@@ -1,120 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>What's Cooking</title>
+  	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>What's Cooking</title>
 
-  <!-- Material link (for CSS/new technology/library) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
-  <!-- local style sheet -->
-  <link rel="stylesheet" type="text/css" href="assets/style/style.css">
-  <!-- Materialize link for icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- JQuery link -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- JS link -->
+    <script type="text/javascript" src="assets/javascript/app.js"></script>
+    <!-- Link to our CSS stylesheet -->
+    <link rel="stylesheet" type="text/css" href="assets/style/style.css">
+    <!-- Material link (for CSS/new technology/library) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+    <!-- Materialize link for icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Link to Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Salsa" rel="stylesheet">
+    <!-- Link to firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
 </head>
 <body>
 
-  <nav class="nav-extended panel #9575cd deep-purple lighten-2">
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo center">What's Cookin'?</a>
-      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-      <!-- <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="assets/html/pantry.html">Pantry</a></li>
-        <li><a href="assets/html/recipe.html">Recipes</a></li>
-      </ul>
-      <ul class="side-nav" id="mobile-demo">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="assets/html/pantry.html">Pantry</a></li>
-        <li><a href="assets/html/recipe.html">Recipes</a></li>
-      </ul> -->
+    <nav class="nav-extended panel #9575cd deep-purple lighten-2">
+        <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">What's Cookin'?</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <!-- <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="assets/html/pantry.html">Pantry</a></li>
+          <li><a href="assets/html/recipe.html">Recipes</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="assets/html/pantry.html">Pantry</a></li>
+          <li><a href="assets/html/recipe.html">Recipes</a></li>
+        </ul> -->
+        </div>
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a class="active" href="index.html">Home</a></li>
+                <li class="tab"><a href="assets/html/pantry.html">Pantry</a></li>
+                <li class="tab"><a href="assets/html/recipe.html">Recipes</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="section">
+
+            <div class="row">
+                <div class="col s12 m4" id="pantryItemsonMainPage"></div>
+            </div>
+
+            <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="deleteFromPantry">Delete from My Pantry<i class="material-icons right">send</i>
+            </button>
+
+            <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="searchForRecipes">Search For Recipes<i class="material-icons right">send</i>
+            </button>
+
+        </div>
     </div>
-    <div class="nav-content">
-      <ul class="tabs tabs-transparent">
-        <li class="tab"><a class="active" href="index.html">Home</a></li>
-        <li class="tab"><a href="assets/html/pantry.html">Pantry</a></li>
-        <li class="tab"><a href="assets/html/recipe.html">Recipes</a></li>
-      </ul>
-    </div>
-  </nav>
-  
-  <div class="container">
-    <div class="section">
 
-      <div class="row">
-        <div class="col s12 m4" id="pantryItemsonMainPage"></div>
-      </div>
-
-      <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="deleteFromPantry">Delete from My Pantry<i class="material-icons right">send</i>
-      </button>
-
-      <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="searchForRecipes">Search For Recipes<i class="material-icons right">send</i>
-      </button>
-
-    </div>
-  </div>
-
-  <!-- Link to Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-  <script>
-
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
-      authDomain: "whatscooking-cb33d.firebaseapp.com",
-      databaseURL: "https://whatscooking-cb33d.firebaseio.com",
-      projectId: "whatscooking-cb33d",
-      storageBucket: "whatscooking-cb33d.appspot.com",
-      messagingSenderId: "296059627382"
-    };
-    firebase.initializeApp(config);
-  </script>
-  <!-- JQuery link -->
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <!-- JS link -->
-  <script type="text/javascript" src="assets/javascript/app.js"></script>
-  <!-- local JS -->
-  <script>
-
-    $(".searchDeleteButton").hide();
-    var database = firebase.database();
-    var pantry = [];
-    var addToMainPantryPage = [];
-
-    displayPantryItemsOnPage(pantry);
-
- function displayPantryItemsOnPage(pantry) {
-    database.ref().on("value", function(snapshot) {
-      addToMainPantryPage = snapshot.val().pantry;
-      addToMainPantryPage = addToMainPantryPage.sort();
-     
-      for (var i = 0; i < addToMainPantryPage.length; i++) {
-        var parent = $("#pantryItemsonMainPage");
-        var checkbox = $("<div>")
-          var input = $("<input>");
-          $(input).attr("type", "checkbox");
-          $(input).attr("id", "item" + i);
-          $(input).addClass("pantryItemHere");
-          $(input).attr("name", addToMainPantryPage[i]);
-          var label = $("<label>");
-          $(label).attr("for", "item" + i);
-          $(label).text(addToMainPantryPage[i]);
-          $(checkbox).append(input);
-          $(checkbox).append(label);
-          $(parent).append(checkbox);
-      }
-    });
-  }
-
-  $(document).on("click", ".pantryItemHere", function(){
-    if ( $(".pantryItemHere").is(":checked") === true ) { $(".searchDeleteButton").fadeIn(); }
-    else if ( $(".pantryItemHere").is(":checked") === false ) { $(".searchDeleteButton").fadeOut(); }
-  });
-
-      </script>
-    </body>
-    </html>
-
-
-
-
+</body>
+</html>
