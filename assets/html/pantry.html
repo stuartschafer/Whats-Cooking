@@ -53,7 +53,7 @@
       <!-- This section is for Pandora's pantry -->
       <div class="col s2" style="background-color: yellow; height: 400px">
         <span class="flow-text">Pandora's Pantry</span>
-        <div id="pandorasPantryItems" class="left-align"></div>
+        <div id="pandorasPantryItems" class="left-align itemGoods2"></div>
       </div>
 
       <!-- This section is for all items available in storage -->
@@ -62,31 +62,31 @@
 
         <div class="col s2">
           <h6>Cold Storage</h6>
-          <div id="coldStorageItems" class="left-align"></div>
+          <div id="coldStorageItems" class="left-align itemGoods"></div>
         </div>
         <div class="col s2">
           <h6>Meats</h6>
-          <div id="meatStorageItems" class="left-align"></div>
+          <div id="meatStorageItems" class="left-align itemGoods"></div>
         </div>
         <div class="col s2">
           <h6>Produce</h6>
-          <div id="produceStorageItems" class="left-align"></div>
+          <div id="produceStorageItems" class="left-align itemGoods"></div>
         </div>
         <div class="col s2">
           <h6>Dry Goods</h6>
-          <div id="dryGoodsStorageItems" class="left-align"></div>
+          <div id="dryGoodsStorageItems" class="left-align itemGoods"></div>
         </div>
         <div class="col s2">
           <h6>Spices</h6>
-          <div id="spiceStorageItems" class="left-align"></div>
+          <div id="spiceStorageItems" class="left-align itemGoods"></div>
         </div>
         <div class="col s2">
           <h6>TBD if needed</h6>
-          <div id="uhhStorageItems" class="left-align"></div>
+          <div id="uhhStorageItems" class="left-align itemGoods"></div>
         </div>
         
       </div>
-      <button class="btn waves-effect waves-light" type="submit" name="action" id="addToMyPantry">Add to My Pantry
+      <button class="btn waves-effect waves-light addToPantryButton" type="submit" name="action" id="addToMyPantry">Add to My Pantry
           <i class="material-icons right">send</i>
       </button>
 
@@ -117,23 +117,18 @@
   var pantry = [];
   var addToPandorasPantry = [];
 
-database.ref().on("value", function(snapshot) {
+  // This runs whenevr a box(es) is clicked and when they are unclicked
+  $(document).on("click", ".pantryItemClicked", function(){
+    if ( $(".pantryItemClicked").is(":checked") === true ) { $(".addToPantryButton").fadeIn(); }
+    else if ( $(".pantryItemClicked").is(":checked") === false ) { $(".addToPantryButton").fadeOut(); }
+  });
 
-  // This tests to make sure there is something in the firebase.
-  if ( snapshot.child("pantry").exists() ) {
-      displayPandorasPantry(pantry);
-  }
-  else {  var addToPandorasPantry = [];
-          arrIngred = [];
-  }
-      displayColdStorage(coldStorage);
-      displayMeatStorage(meatStorage);
-      displayProduceStorage(produceStorage);
-      displayDryGoodsStorage(dryGoodsStorage);
-      displaySpiceStorage(spiceStorage);
-});
+  $(".addToPantryButton").hide();
+
+displayPandorasPantry(pantry);
 
   function goIntoPantry() {
+    $(".addToPantryButton").hide();
     var arrIngred = [];
     var newIngred = [];
     var checkedButtons = $("input[id^='item']:checked");
@@ -145,28 +140,40 @@ database.ref().on("value", function(snapshot) {
     var newArray = arrIngred.concat(addToPandorasPantry);
     // This sets the new array in firebase
     database.ref().set({ pantry: newArray });
-    // This reloads the page to display the pantry and storage items correctly.
-    location.reload();
   }
 
   // This displays Pandora's pantry items on the left-hand side of the page.
   // Any item in the pantry will not be displayed on the storage section (right-hand side).
   function displayPandorasPantry(pantry) {
-    database.ref().on("value", function(snapshot) {
-    addToPandorasPantry = snapshot.val().pantry;
-    addToPandorasPantry = addToPandorasPantry.sort();
-     
-    for (var j = 0; j < addToPandorasPantry.length; j++) {
-      var parent2 = $("#pandorasPantryItems");
-      var checkbox2 = $("<div>")
-      var label2 = $("<label>");
-      $(label2).css({"line-height":"25px","font-size":"1rem"});
-      $(label2).text(addToPandorasPantry[j]);
-      $(checkbox2).append(label2);
-      $(parent2).append(checkbox2);
-    }
-  });
-}
+      database.ref().on("value", function(snapshot) {
+    
+      // This tests to make sure there is something in the firebase.
+      if ( snapshot.child("pantry").exists() ) {
+        $(".itemGoods2").empty();
+        addToPandorasPantry = snapshot.val().pantry;
+        addToPandorasPantry = addToPandorasPantry.sort();
+         
+        for (var j = 0; j < addToPandorasPantry.length; j++) {
+          var parent2 = $("#pandorasPantryItems");
+          var checkbox2 = $("<div>")
+          var label2 = $("<label>");
+          $(label2).css({"line-height":"25px","font-size":"1rem"});
+          $(label2).text(addToPandorasPantry[j]);
+          $(checkbox2).append(label2);
+          $(parent2).append(checkbox2);
+        }
+      }
+      else {  
+          addToPandorasPantry = [];
+          arrIngred = []; }
+          $(".itemGoods").empty();
+          displayColdStorage(coldStorage);
+          displayMeatStorage(meatStorage);
+          displayProduceStorage(produceStorage);
+          displayDryGoodsStorage(dryGoodsStorage);
+          displaySpiceStorage(spiceStorage);
+    });
+  }
 
 // This runs when the user selects some items and presses the "Add to My Pantry" button.
 // Might add a modal later on if the user does not select anything.
@@ -181,10 +188,11 @@ $("#addToMyPantry").on("click", function(event) {
     for (var i = 0; i < coldStorage.length; i++) {
       if( $.inArray(coldStorage[i], addToPandorasPantry) !== -1 ) {}
       else {
-        var checkbox = $("<div>")
+        var checkbox = $("<div>");
         var input = $("<input>");
         $(input).attr("type", "checkbox");
         $(input).attr("id", "item" + i);
+        $(input).addClass("pantryItemClicked");
         $(input).attr("name", coldStorage[i]);
         var label = $("<label>");
         $(label).attr("for", "item" + i);
@@ -200,10 +208,11 @@ $("#addToMyPantry").on("click", function(event) {
     for (var i = 20; i < (meatStorage.length+20); i++) {
       if( $.inArray(meatStorage[i-20], addToPandorasPantry) !== -1 ) {}
       else {
-        var checkbox = $("<div>")
+        var checkbox = $("<div>");
         var input = $("<input>");
         $(input).attr("type", "checkbox");
         $(input).attr("id", "item" + i);
+        $(input).addClass("pantryItemClicked");
         $(input).attr("name", meatStorage[i-20]);
         var label = $("<label>");
         $(label).attr("for", "item" + i);
@@ -219,10 +228,11 @@ $("#addToMyPantry").on("click", function(event) {
     for (var i = 40; i < (produceStorage.length+40); i++) {
       if( $.inArray(produceStorage[i-40], addToPandorasPantry) !== -1 ) {}
       else {
-        var checkbox = $("<div>")
+        var checkbox = $("<div>");
         var input = $("<input>");
         $(input).attr("type", "checkbox");
         $(input).attr("id", "item" + i);
+        $(input).addClass("pantryItemClicked");
         $(input).attr("name", produceStorage[i-40]);
         var label = $("<label>");
         $(label).attr("for", "item" + i);
@@ -238,10 +248,11 @@ $("#addToMyPantry").on("click", function(event) {
     for (var i = 60; i < (dryGoodsStorage.length+60); i++) {
       if( $.inArray(dryGoodsStorage[i-60], addToPandorasPantry) !== -1 ) {}
       else {
-        var checkbox = $("<div>")
+        var checkbox = $("<div>");
         var input = $("<input>");
         $(input).attr("type", "checkbox");
         $(input).attr("id", "item" + i);
+        $(input).addClass("pantryItemClicked");
         $(input).attr("name", dryGoodsStorage[i-60]);
         var label = $("<label>");
         $(label).attr("for", "item" + i);
@@ -257,10 +268,11 @@ $("#addToMyPantry").on("click", function(event) {
     for (var i = 80; i < (spiceStorage.length+80); i++) {
       if( $.inArray(spiceStorage[i-80], addToPandorasPantry) !== -1 ) {}
       else {
-        var checkbox = $("<div>")
+        var checkbox = $("<div>");
         var input = $("<input>");
         $(input).attr("type", "checkbox");
         $(input).attr("id", "item" + i);
+        $(input).addClass("pantryItemClicked");
         $(input).attr("name", spiceStorage[i-80]);
         var label = $("<label>");
         $(label).attr("for", "item" + i);

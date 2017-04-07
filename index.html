@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
   <!-- local style sheet -->
   <link rel="stylesheet" type="text/css" href="assets/style/style.css">
+  <!-- Materialize link for icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
 
@@ -40,10 +42,14 @@
     <div class="section">
 
       <div class="row">
-        <div class="col s12 m4" id="pandorasPantryItems">
-
-        </div>
+        <div class="col s12 m4" id="pantryItemsonMainPage"></div>
       </div>
+
+      <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="deleteFromPantry">Delete from My Pantry<i class="material-icons right">send</i>
+      </button>
+
+      <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="searchForRecipes">Search For Recipes<i class="material-icons right">send</i>
+      </button>
 
     </div>
   </div>
@@ -51,6 +57,7 @@
   <!-- Link to Firebase -->
   <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
   <script>
+
     // Initialize Firebase
     var config = {
       apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
@@ -68,49 +75,42 @@
   <script type="text/javascript" src="assets/javascript/app.js"></script>
   <!-- local JS -->
   <script>
-    // var database = firebase.database();
-    // var pantry = [];
 
-    // displayPandorasPantry(pantry);
+    $(".searchDeleteButton").hide();
+    var database = firebase.database();
+    var pantry = [];
+    var addToMainPantryPage = [];
 
-    // function displayPandorasPantry(pantry) {
-    //   database.ref().on("value", function(snapshot) {
-    //     addToPandorasPantry = snapshot.val().pantry;
-    //     addToPandorasPantry = addToPandorasPantry.sort();
+    displayPantryItemsOnPage(pantry);
 
-    //     for (var j = 0; j < addToPandorasPantry.length; j++) {
-    //       var parent2 = $("#pandorasPantryItems");
-    //       var checkbox2 = $("<div>");
-    //       $(input).attr("type", "checkbox");
-    //       $(input).attr("id", "item" + j);
-    //       $(input).attr("name", pantry[j]);
-    //       var label2 = $("<label>");
-    //       $(label2).css({"line-height":"25px","font-size":"1rem"});
-    //       $(label2).text(addToPandorasPantry[j]);
-    //       $(checkbox).append(input);
-    //       $(checkbox2).append(label2);
-    //       $(parent2).append(checkbox2);
-    //     }
-    //   });
-    // }
-    // function displayPandorasPantry(pantry) {
-    //   var parent = $("#pandorasPantryItems");
-    //   for (var i = 0; i < pantry.length; i++) {
-    //     if( $.inArray(pantry[i], addToPandorasPantry) !== -1 ) {}
-    //       else {
-    //         var checkbox = $("<div>");
-    //         var input = $("<input>");
-    //         $(input).attr("type", "checkbox");
-    //         $(input).attr("id", "item" + i);
-    //         $(input).attr("name", pantry[i]);
-    //         var label = $("<label>");
-    //         $(label).attr("for", "item" + i);
-    //         $(label).text(pantry[i]);
-    //         $(checkbox).append(input);
-    //         $(checkbox).append(label);
-    //         $(parent).append(checkbox); }
-    //       }
-    //     }
+ function displayPantryItemsOnPage(pantry) {
+    database.ref().on("value", function(snapshot) {
+      addToMainPantryPage = snapshot.val().pantry;
+      addToMainPantryPage = addToMainPantryPage.sort();
+     
+      for (var i = 0; i < addToMainPantryPage.length; i++) {
+        var parent = $("#pantryItemsonMainPage");
+        var checkbox = $("<div>")
+          var input = $("<input>");
+          $(input).attr("type", "checkbox");
+          $(input).attr("id", "item" + i);
+          $(input).addClass("pantryItemHere");
+          $(input).attr("name", addToMainPantryPage[i]);
+          var label = $("<label>");
+          $(label).attr("for", "item" + i);
+          $(label).text(addToMainPantryPage[i]);
+          $(checkbox).append(input);
+          $(checkbox).append(label);
+          $(parent).append(checkbox);
+      }
+    });
+  }
+
+  $(document).on("click", ".pantryItemHere", function(){
+    if ( $(".pantryItemHere").is(":checked") === true ) { $(".searchDeleteButton").fadeIn(); }
+    else if ( $(".pantryItemHere").is(":checked") === false ) { $(".searchDeleteButton").fadeOut(); }
+  });
+
       </script>
     </body>
     </html>
