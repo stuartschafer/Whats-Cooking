@@ -18,7 +18,6 @@ $(document).ready(function() {
             console.log(response);
             for (var i = 0; i < response.length; i++) {
                 getRecipe(response[i].id);
-
             }
         });
     }
@@ -37,39 +36,49 @@ $(document).ready(function() {
                 // console.log(recipe);
                 layoutRecipeCard(recipe);
             }
-
         });
     }
 
+
     function layoutRecipeCard(recipeData) {
+
         var parent = $("#recipeData")
-
         var cardParent = $("<div>");
-        $(cardParent).addClass("mdl-card mdl-cell mdl-cell--2-col mdl-cell--4-col-tablet mdl-shadow--2dp");
+        $(cardParent).addClass("col s12 m6");
 
-        var newFigure = $("<figure>");
-        $(newFigure).addClass("mdl-card__media");
+        var card = $("<div>");
+        $(card).addClass("card");
+
+        var newFigure = $("<div>");
+        $(newFigure).addClass("card-image waves-effect waves-block waves-light");
+
         var newImage = $("<img>");
+        $(newImage).addClass("activator");
         $(newImage).attr("src", recipeData.image);
         $(newFigure).append(newImage);
 
-        var cardTitle = $("<div>");
-        $(cardTitle).append('<h3 class="mdl-card__title-text">' + recipeData.title + '</h3>');
+        var cardContent = $("<div>");
+        $(cardContent).append('<span class="card-title activator grey-text text-darken-4">' + recipeData.title + '<i class="material-icons right">more_vert</i></span>');
 
-        var cardText = $("<div>");
-        $(cardText).append('<p>Cooking Time : ' + recipeData.readyInMinutes + '</p>');
-        $(cardText).append('<p>Servings : ' + recipeData.servings + '</p>');
-        $(cardText).append('<p>Score : ' + recipeData.spoonacularScore + '</p>');
+        $(cardContent).append('<p>Cooking Time : ' + recipeData.readyInMinutes + '</p>');
+        $(cardContent).append('<p>Servings : ' + recipeData.servings + '</p>');
+        $(cardContent).append('<p>Score : ' + recipeData.spoonacularScore + '</p>');
 
-        var cardBorder = $("<div>");
-        $(cardBorder).addClass("mdl-card__actions mdl-card--border");
-        $(cardBorder).attr("data-id", recipeData.id);
-        $(cardBorder).append('<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="readMore">Read More</a>');
+        var cardAction = $("<div>")
+        $(cardAction).addClass("card-action")
+        $(cardAction).append('<a class="waves-effect waves-light btn-large">Button</a>')
 
-        $(cardParent).append(newFigure);
-        $(cardParent).append(cardTitle);
-        $(cardParent).append(cardText);
-        $(cardParent).append(cardBorder);
+        var cardDetails = $("<div>");
+        $(cardDetails).addClass("card-reveal");
+        $(cardDetails).attr("data-id", recipeData.id);
+        $(cardDetails).append('<span class="card-title grey-text text-darken-4">' + recipeData.title + '<i class="material-icons right">close</i></span>');
+        $(cardDetails).append(recipeData.instructions);
+
+        $(card).append(newFigure);
+        $(card).append(cardContent);
+        $(card).append(cardDetails);
+        $(card).append(cardAction);
+        $(cardParent).append(card);
         $(parent).append(cardParent);
     }
 
@@ -78,7 +87,6 @@ $(document).ready(function() {
     $("body").on("click", "#readMore", function() {
         console.log("press press")
         $(this.parentElement).data("id")
-
     });
 
 
