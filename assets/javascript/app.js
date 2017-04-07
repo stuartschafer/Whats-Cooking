@@ -1,13 +1,10 @@
 $(document).ready(function() {
-    var recipeIngredients0 = [];
-    var recipeIngredients1 = [];
-    var recipeIngredients2 = [];
-    var recipeIngredients3 = [];
-    var recipeIngredients4 = [];
+    var ingredients = [];
 
     function getData(query) {
         var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&limitLicense=true&number=5&ranking=1&ingredients=" + query;
-        // var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/769774/information";
+        ingredients = query.split(",");
+
         $.ajax({
             url: queryURL,
             method: "GET",
@@ -33,16 +30,37 @@ $(document).ready(function() {
             }
         }).done(function(recipe) {
             if (recipe.instructions) {
-                // console.log(recipe);
+                var recipeIngredients = [];
+                for (var i = 0; i < recipe.extendedIngredients.length; i++) {
+                    recipeIngredients.push(recipe.extendedIngredients[i].name);
+                    
+                }
+                // compareIngredients(ingredients, recipeIngredients);
                 layoutRecipeCard(recipe);
             }
         });
     }
 
 
-    function layoutRecipeCard(recipeData) {
+    function compareIngredients(pantry, recipe) {
+        console.log("pantry: " + pantry);
+        console.log("recipe: " + recipe);
+        var missingIngredients = [];
 
-        var parent = $("#recipeData")
+        for (var i = 0; i < recipe.length; i++) {
+            if ($.inArray(recipe[i], pantry) === -1) {
+                missingIngredients.push(recipe[i]);
+            }
+
+            // if (pantry.indexOf(recipe[i]) === -1) {
+            //     missingIngredients.push(recipe[i]);
+            // }
+        }
+        console.log(missingIngredients);
+    }
+
+    function layoutRecipeCard(recipeData) {
+        var parent = $("#recipeData");
         var cardParent = $("<div>");
         $(cardParent).addClass("col s12 m6");
 
@@ -64,9 +82,9 @@ $(document).ready(function() {
         $(cardContent).append('<p>Servings : ' + recipeData.servings + '</p>');
         $(cardContent).append('<p>Score : ' + recipeData.spoonacularScore + '</p>');
 
-        var cardAction = $("<div>")
-        $(cardAction).addClass("card-action")
-        $(cardAction).append('<a class="waves-effect waves-light btn-large">Button</a>')
+        var cardAction = $("<div>");
+        $(cardAction).addClass("card-action");
+        $(cardAction).append('<a class="waves-effect waves-light btn-large">Button</a>');
 
         var cardDetails = $("<div>");
         $(cardDetails).addClass("card-reveal");
@@ -82,11 +100,11 @@ $(document).ready(function() {
         $(parent).append(cardParent);
     }
 
-    getData("chicken,potatoes");
+    getData("chicken,potato");
 
     $("body").on("click", "#readMore", function() {
-        console.log("press press")
-        $(this.parentElement).data("id")
+        console.log("press press");
+        $(this.parentElement).data("id");
     });
 
 

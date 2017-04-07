@@ -68,31 +68,31 @@
   <script type="text/javascript" src="assets/javascript/app.js"></script>
   <!-- local JS -->
   <script>
-    var database = firebase.database();
-    var pantry = [];
+    // var database = firebase.database();
+    // var pantry = [];
 
-    displayPandorasPantry(pantry);
+    // displayPandorasPantry(pantry);
 
-    function displayPandorasPantry(pantry) {
-      database.ref().on("value", function(snapshot) {
-        addToPandorasPantry = snapshot.val().pantry;
-        addToPandorasPantry = addToPandorasPantry.sort();
+    // function displayPandorasPantry(pantry) {
+    //   database.ref().on("value", function(snapshot) {
+    //     addToPandorasPantry = snapshot.val().pantry;
+    //     addToPandorasPantry = addToPandorasPantry.sort();
 
-        for (var j = 0; j < addToPandorasPantry.length; j++) {
-          var parent2 = $("#pandorasPantryItems");
-          var checkbox2 = $("<div>");
-          $(input).attr("type", "checkbox");
-          $(input).attr("id", "item" + j);
-          $(input).attr("name", pantry[j]);
-          var label2 = $("<label>");
-          $(label2).css({"line-height":"25px","font-size":"1rem"});
-          $(label2).text(addToPandorasPantry[j]);
-          $(checkbox).append(input);
-          $(checkbox2).append(label2);
-          $(parent2).append(checkbox2);
-        }
-      });
-    }
+    //     for (var j = 0; j < addToPandorasPantry.length; j++) {
+    //       var parent2 = $("#pandorasPantryItems");
+    //       var checkbox2 = $("<div>");
+    //       $(input).attr("type", "checkbox");
+    //       $(input).attr("id", "item" + j);
+    //       $(input).attr("name", pantry[j]);
+    //       var label2 = $("<label>");
+    //       $(label2).css({"line-height":"25px","font-size":"1rem"});
+    //       $(label2).text(addToPandorasPantry[j]);
+    //       $(checkbox).append(input);
+    //       $(checkbox2).append(label2);
+    //       $(parent2).append(checkbox2);
+    //     }
+    //   });
+    // }
     // function displayPandorasPantry(pantry) {
     //   var parent = $("#pandorasPantryItems");
     //   for (var i = 0; i < pantry.length; i++) {
