@@ -11,12 +11,6 @@ $(document).ready(function() {
     firebase.initializeApp(config);
 
     var database = firebase.database();
-
-    // var coldStorage = ["Butter", "Cheddar Cheese", "Cream Cheese", "Eggs", "Milk", "Sour Cream", "Whipping Cream", "Yogurt"];
-    // var meatStorage = ["Bacon", "Chicken", "Ground Beef", "Ground Turkey", "Ham", "Pork Loin", "Ribeye", "Ribs", "Rump Roast"];
-    // var produceStorage = ["Broccoli", "Cauliflower", "Carrot", "Corn", "Cucumber", "Lettuce", "Onion", "Potato", "Tomato", ];
-    // var dryGoodsStorage = ["Bread", "Chocolate", "Olive Oil", "Peanut Butter", "Rice", "Salmon", "Soy Sauce", "Tuna Fish", "Vegetable Oil", "Vinegar", "Wine"];
-    // var spiceStorage = ["Bay Leaf", "Basil", "Brown Sugar", "Flour", "Garlic", "Ginger", "Mint", "Paprika", "Pepper", "Salt", "Sugar", "Vanilla Extract"];
     
     var pantryObj = {
       "Bacon": "Meat", "Chicken": "Meat", "Ground Beef": "Meat", "Ground Turkey": "Meat", "Ham": "Meat", "Pork Loin": "Meat",
@@ -295,12 +289,12 @@ $(document).ready(function() {
     });
   }
 
-// This runs when the user selects some items and presses the "Add to My Pantry" button.
-// Might add a modal later on if the user does not select anything.
-$("#addToMyPantry").on("click", function(event) {
-    event.preventDefault();
-    goIntoPantry();
-});
+  // This runs when the user selects some items and presses the "Add to My Pantry" button.
+  // Might add a modal later on if the user does not select anything.
+  $("#addToMyPantry").on("click", function(event) {
+      event.preventDefault();
+      goIntoPantry();
+  });
 
   function displayStorage(arr, newDiv, num) {
     var parent = newDiv;
