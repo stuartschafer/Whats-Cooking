@@ -32,7 +32,7 @@ $(document).ready(function() {
     
     var pantry = [];
     var addToPandorasPantry = [];
-
+    $("#emptyPantry").hide();
     var ingredients = [];
 
     function getData(query) {
@@ -132,6 +132,8 @@ $(document).ready(function() {
     }
 
     getData("Rice");
+    getData("Basil");
+
 
     $("body").on("click", "#readMore", function() {
         console.log("press press");
@@ -154,9 +156,13 @@ $(document).ready(function() {
 
  function displayPantryItemsOnPage(pantry) {
     database.ref().on("value", function(snapshot) {
-      addToMainPantryPage = snapshot.val().pantry;
-      addToMainPantryPage = addToMainPantryPage.sort();
-     
+
+    if ( snapshot.child("pantry").exists() ) {
+        $("#emptyPantry").hide();
+        $("#pantryItemsonMainPage").empty();
+        addToMainPantryPage = snapshot.val().pantry;
+        addToMainPantryPage = addToMainPantryPage.sort();
+         
       for (var i = 0; i < addToMainPantryPage.length; i++) {
         var parent = $("#pantryItemsonMainPage");
         var checkbox = $("<div>")
@@ -171,7 +177,10 @@ $(document).ready(function() {
           $(checkbox).append(input);
           $(checkbox).append(label);
           $(parent).append(checkbox);
+        }
       }
+      else { $("#emptyPantry").show();
+             $("#pantryItemsonMainPage").empty(); }
     });
   }
 
