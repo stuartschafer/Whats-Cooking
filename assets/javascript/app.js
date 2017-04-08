@@ -354,5 +354,26 @@ $(document).ready(function() {
         goIntoPantry();
     });
 
+    // delete button
+    $("#deleteFromPantry").on("click", function() {
+        var checkedButtons = $("input[id^='item']:checked");
+        var arrIngred = [];
+        var remIngred = [];
+        var length;
 
+        database.ref().on("value", function(snapshot) {
+            arrIngred = snapshot.val().pantry;
+        });
+
+        for (var i = 0; i < checkedButtons.length; i++) {
+            remIngred.push(checkedButtons[i].name);
+        }
+
+        for (var j = 0; j < remIngred.length; j ++) {
+            var index = arrIngred.indexOf(remIngred[j]);
+            arrIngred.splice(index, 1);
+        }
+        console.log(arrIngred);
+        console.log(remIngred);
+     });
 });
