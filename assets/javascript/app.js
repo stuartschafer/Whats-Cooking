@@ -298,14 +298,25 @@ $(document).ready(function() {
         }
     }
 
+    function getSelectedIngredients() {
 
-    getData("Rice");
-    getData("Basil");
+    }
 
 
     $("body").on("click", "#readMore", function() {
-        console.log("press press");
+
         $(this.parentElement).data("id");
+    });
+
+
+    $("body").on("click", "#searchForRecipes", function() {
+        var arrSelected = [];
+        var selected = $("input[class^='pantryItemHere']:checked")
+        for (var index = 0; index < selected.length; index++) {
+            arrSelected.push(selected[index].name);
+        }
+        getData(arrSelected.toString());
+
     });
 
     $(".searchDeleteButton").hide();
