@@ -1,4 +1,44 @@
 $(document).ready(function() {
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
+      authDomain: "whatscooking-cb33d.firebaseapp.com",
+      databaseURL: "https://whatscooking-cb33d.firebaseio.com",
+      projectId: "whatscooking-cb33d",
+      storageBucket: "whatscooking-cb33d.appspot.com",
+      messagingSenderId: "296059627382"
+    };
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+
+    // var coldStorage = ["Butter", "Cheddar Cheese", "Cream Cheese", "Eggs", "Milk", "Sour Cream", "Whipping Cream", "Yogurt"];
+    // var meatStorage = ["Bacon", "Chicken", "Ground Beef", "Ground Turkey", "Ham", "Pork Loin", "Ribeye", "Ribs", "Rump Roast"];
+    // var produceStorage = ["Broccoli", "Cauliflower", "Carrot", "Corn", "Cucumber", "Lettuce", "Onion", "Potato", "Tomato", ];
+    // var dryGoodsStorage = ["Bread", "Chocolate", "Olive Oil", "Peanut Butter", "Rice", "Salmon", "Soy Sauce", "Tuna Fish", "Vegetable Oil", "Vinegar", "Wine"];
+    // var spiceStorage = ["Bay Leaf", "Basil", "Brown Sugar", "Flour", "Garlic", "Ginger", "Mint", "Paprika", "Pepper", "Salt", "Sugar", "Vanilla Extract"];
+    
+    var pantryObj = {
+      "Bacon": "Meat", "Chicken": "Meat", "Ground Beef": "Meat", "Ground Turkey": "Meat", "Ham": "Meat", "Pork Loin": "Meat",
+      "Ribeye": "Meat", "Ribs": "Meat", "Rump Roast": "Meat", "Beef": "Meat", 
+
+      "Salmon": "Seafood",
+
+      "Broccoli": "Produce", "Cauliflower": "Produce", "Carrot": "Produce", "Corn": "Produce", "Lettuce": "Produce", "Onion": "Produce",
+      "Potato": "Produce", "Tomato": "Produce", "Leek": "Produce", "Garlic": "Produce", "Lemon": "Produce", "Cucumber": "Produce",
+
+      "Black Olives": "Canned and Jarred",
+
+      "Cheddar Cheese": "Cheese",
+
+      "Eggs": "Milk, Eggs, Other Dairy", "Milk": "Milk, Eggs, Other Dairy", "Butter": "Milk, Eggs, Other Dairy",
+
+      "Rice": "Pasta and Rice"
+    };
+    
+    var pantry = [];
+    var addToPandorasPantry = [];
+
     var ingredients = [];
 
     function getData(query) {
@@ -30,6 +70,7 @@ $(document).ready(function() {
             }
         }).done(function(recipe) {
             if (recipe.instructions) {
+              console.log(recipe);
                 var recipeIngredients = [];
                 for (var i = 0; i < recipe.extendedIngredients.length; i++) {
                     recipeIngredients.push(recipe.extendedIngredients[i].name);
@@ -51,10 +92,6 @@ $(document).ready(function() {
             if ($.inArray(recipe[i], pantry) === -1) {
                 missingIngredients.push(recipe[i]);
             }
-
-            // if (pantry.indexOf(recipe[i]) === -1) {
-            //     missingIngredients.push(recipe[i]);
-            // }
         }
         console.log(missingIngredients);
     }
@@ -100,7 +137,7 @@ $(document).ready(function() {
         $(parent).append(cardParent);
     }
 
-    getData("chicken,potato");
+    getData("Rice");
 
     $("body").on("click", "#readMore", function() {
         console.log("press press");
@@ -111,16 +148,8 @@ $(document).ready(function() {
 // This js is for index.html
 // This js is for index.html
 
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
-      authDomain: "whatscooking-cb33d.firebaseapp.com",
-      databaseURL: "https://whatscooking-cb33d.firebaseio.com",
-      projectId: "whatscooking-cb33d",
-      storageBucket: "whatscooking-cb33d.appspot.com",
-      messagingSenderId: "296059627382"
-    };
-    firebase.initializeApp(config);
+    
+    
  
     $(".searchDeleteButton").hide();
     var database = firebase.database();
@@ -165,16 +194,7 @@ $(document).ready(function() {
 // This js is for pantry.html
 // This js is for pantry.html
 // This js is for pantry.html
-
-  // Sets inital variables
-  var database = firebase.database();
-  var coldStorage = ["Butter", "Cheddar Cheese", "Cream Cheese", "Eggs", "Milk", "Sour Cream", "Whipping Cream", "Yogurt"];
-  var meatStorage = ["Bacon", "Chicken", "Ground Beef", "Ground Turkey", "Ham", "Pork Loin", "Ribeye", "Ribs", "Rump Roast"];
-  var produceStorage = ["Broccoli", "Cauliflower", "Carrot", "Corn", "Cucumber", "Lettuce", "Onion", "Potato", "Tomato", ];
-  var dryGoodsStorage = ["Bread", "Chocolate", "Olive Oil", "Peanut Butter", "Rice", "Salmon", "Soy Sauce", "Tuna Fish", "Vegetable Oil", "Vinegar", "Wine"];
-  var spiceStorage = ["Bay Leaf", "Basil", "Brown Sugar", "Flour", "Garlic", "Ginger", "Mint", "Paprika", "Pepper", "Salt", "Sugar", "Vanilla Extract"];
-  var pantry = [];
-  var addToPandorasPantry = [];
+  
 
   // This runs whenevr a box(es) is clicked and when they are unclicked
   $(document).on("click", ".pantryItemClicked", function(){
@@ -184,7 +204,7 @@ $(document).ready(function() {
 
   $(".addToPantryButton").hide();
 
-displayPandorasPantry(pantry);
+  displayPandorasPantry(pantry);
 
   function goIntoPantry() {
     $(".addToPantryButton").hide();
@@ -204,8 +224,15 @@ displayPandorasPantry(pantry);
   // This displays Pandora's pantry items on the left-hand side of the page.
   // Any item in the pantry will not be displayed on the storage section (right-hand side).
   function displayPandorasPantry(pantry) {
+      
       database.ref().on("value", function(snapshot) {
-    
+        var meatStorage = [];
+        var seafoodStorage = [];
+        var produceStorage = [];
+        var cannedStorage = [];
+        var cheeseStorage = [];
+        var dairyStorage = [];
+        var pastaRiceStorage = [];
       // This tests to make sure there is something in the firebase.
       if ( snapshot.child("pantry").exists() ) {
         $(".itemGoods2").empty();
@@ -223,124 +250,79 @@ displayPandorasPantry(pantry);
         }
       }
       else {  
+          
           addToPandorasPantry = [];
           arrIngred = []; }
           $(".itemGoods").empty();
-          displayColdStorage(coldStorage);
-          displayMeatStorage(meatStorage);
-          displayProduceStorage(produceStorage);
-          displayDryGoodsStorage(dryGoodsStorage);
-          displaySpiceStorage(spiceStorage);
+          // attempt to use pantryObj
+          for (var food in pantryObj) {
+            switch (pantryObj[food]) {
+              case "Meat":
+                meatStorage.push(food);
+                break;
+              case "Seafood":
+                seafoodStorage.push(food);
+                break;
+              case "Produce":
+                produceStorage.push(food);
+                break;
+              case "Canned and Jarred":
+                cannedStorage.push(food);
+                break;
+              case "Cheese":
+                cheeseStorage.push(food);
+                break;
+              case "Milk, Eggs, Other Dairy":
+                dairyStorage.push(food);
+                break;
+              case "Pasta and Rice":
+                pastaRiceStorage.push(food);
+                break;
+            }
+          }
+          displayStorage(meatStorage, $("#meat-storage"), 0);
+          displayStorage(seafoodStorage, $("#seafood-storage"), 20);
+          displayStorage(produceStorage, $("#produce-storage"), 40);
+          displayStorage(cannedStorage, $("#canned-storage"), 60);
+          displayStorage(cheeseStorage, $("#cheese-storage"), 80);
+          displayStorage(dairyStorage, $("#dairy-storage"), 100);
+
+          // displayColdStorage(coldStorage);
+          // displayMeatStorage(meatStorage);
+          // displayProduceStorage(produceStorage);
+          // displayDryGoodsStorage(dryGoodsStorage);
+          // displaySpiceStorage(spiceStorage);
     });
   }
 
 // This runs when the user selects some items and presses the "Add to My Pantry" button.
 // Might add a modal later on if the user does not select anything.
 $("#addToMyPantry").on("click", function(event) {
+    event.preventDefault();
     goIntoPantry();
 });
 
-  // This displays the storage items on the right-hand side of the page.
-  // If a pantry item is on the left, then it will not show up on the right.
-  function displayColdStorage(coldStorage) {
-    var parent = $("#coldStorageItems");
-    for (var i = 0; i < coldStorage.length; i++) {
-      if( $.inArray(coldStorage[i], addToPandorasPantry) !== -1 ) {}
+  function displayStorage(arr, newDiv, num) {
+    var parent = newDiv;
+    for (var i = 0; i < arr.length; i++) {
+      if( $.inArray(arr[i], addToPandorasPantry) !== -1 ) {}
       else {
         var checkbox = $("<div>");
         var input = $("<input>");
         $(input).attr("type", "checkbox");
-        $(input).attr("id", "item" + i);
+        $(input).attr("id", "item" + num);
         $(input).addClass("pantryItemClicked");
-        $(input).attr("name", coldStorage[i]);
+        $(input).attr("name", arr[i]);
         var label = $("<label>");
-        $(label).attr("for", "item" + i);
-        $(label).text(coldStorage[i]);
+        $(label).attr("for", "item" + num);
+        $(label).text(arr[i]);
         $(checkbox).append(input);
         $(checkbox).append(label);
-        $(parent).append(checkbox); }
+        $(parent).append(checkbox); 
+        num++;
+      }
     }
-  };
-
-  function displayMeatStorage(meatStorage) {
-    var parent = $("#meatStorageItems");
-    for (var i = 20; i < (meatStorage.length+20); i++) {
-      if( $.inArray(meatStorage[i-20], addToPandorasPantry) !== -1 ) {}
-      else {
-        var checkbox = $("<div>");
-        var input = $("<input>");
-        $(input).attr("type", "checkbox");
-        $(input).attr("id", "item" + i);
-        $(input).addClass("pantryItemClicked");
-        $(input).attr("name", meatStorage[i-20]);
-        var label = $("<label>");
-        $(label).attr("for", "item" + i);
-        $(label).text(meatStorage[i-20]);
-        $(checkbox).append(input);
-        $(checkbox).append(label);
-        $(parent).append(checkbox); }
-    }
-  };
-
-  function displayProduceStorage(produceStorage) {
-    var parent = $("#produceStorageItems");
-    for (var i = 40; i < (produceStorage.length+40); i++) {
-      if( $.inArray(produceStorage[i-40], addToPandorasPantry) !== -1 ) {}
-      else {
-        var checkbox = $("<div>");
-        var input = $("<input>");
-        $(input).attr("type", "checkbox");
-        $(input).attr("id", "item" + i);
-        $(input).addClass("pantryItemClicked");
-        $(input).attr("name", produceStorage[i-40]);
-        var label = $("<label>");
-        $(label).attr("for", "item" + i);
-        $(label).text(produceStorage[i-40]);
-        $(checkbox).append(input);
-        $(checkbox).append(label);
-        $(parent).append(checkbox); }
-    }
-  };
-
-  function displayDryGoodsStorage(dryGoodsStorage) {
-    var parent = $("#dryGoodsStorageItems");
-    for (var i = 60; i < (dryGoodsStorage.length+60); i++) {
-      if( $.inArray(dryGoodsStorage[i-60], addToPandorasPantry) !== -1 ) {}
-      else {
-        var checkbox = $("<div>");
-        var input = $("<input>");
-        $(input).attr("type", "checkbox");
-        $(input).attr("id", "item" + i);
-        $(input).addClass("pantryItemClicked");
-        $(input).attr("name", dryGoodsStorage[i-60]);
-        var label = $("<label>");
-        $(label).attr("for", "item" + i);
-        $(label).text(dryGoodsStorage[i-60]);
-        $(checkbox).append(input);
-        $(checkbox).append(label);
-        $(parent).append(checkbox); }
-    }
-  };
-
-  function displaySpiceStorage(spiceStorage) {
-    var parent = $("#spiceStorageItems");
-    for (var i = 80; i < (spiceStorage.length+80); i++) {
-      if( $.inArray(spiceStorage[i-80], addToPandorasPantry) !== -1 ) {}
-      else {
-        var checkbox = $("<div>");
-        var input = $("<input>");
-        $(input).attr("type", "checkbox");
-        $(input).attr("id", "item" + i);
-        $(input).addClass("pantryItemClicked");
-        $(input).attr("name", spiceStorage[i-80]);
-        var label = $("<label>");
-        $(label).attr("for", "item" + i);
-        $(label).text(spiceStorage[i-80]);
-        $(checkbox).append(input);
-        $(checkbox).append(label);
-        $(parent).append(checkbox); }
-    }
-  };
+  }
 // End of js for pantry.html
 // End of js for pantry.html
 // End of js for pantry.html
