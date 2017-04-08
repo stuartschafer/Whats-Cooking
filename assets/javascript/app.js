@@ -33,7 +33,7 @@ $(document).ready(function() {
                 var recipeIngredients = [];
                 for (var i = 0; i < recipe.extendedIngredients.length; i++) {
                     recipeIngredients.push(recipe.extendedIngredients[i].name);
-                    
+
                 }
                 // compareIngredients(ingredients, recipeIngredients);
                 layoutRecipeCard(recipe);
@@ -41,6 +41,11 @@ $(document).ready(function() {
         });
     }
 
+    function testIngredients(supplied, required) {
+        if (required.search(supplied) >= 0) {
+            return true;
+        }
+    }
 
     function compareIngredients(pantry, recipe) {
         console.log("pantry: " + pantry);
