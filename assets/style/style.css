@@ -1,29 +1,27 @@
-<<<<<<< HEAD
-=======
-
-.mdl-card__media {
-    margin: 0;
+body { 
+    font-family: 'Salsa', cursive; 
+    color: #171A21;
+    background-color: #7A93AC;
 }
 
-.mdl-card__media>img {
-    max-width: 100%;
-}
-
-.mdl-card__actions {
-    /*display: flex;*/
-    box-sizing: border-box;
-    align-items: center;
-}
-
-.mdl-card__actions>.mdl-button--icon {
-    margin-right: 3px;
-    margin-left: 3px;
-}
-
->>>>>>> d6d8f4d47df3475e7feb87378fe51b1445aa3c8a
 h3 {
     font-size: 15px;
 }
 
-body { font-family: 'Salsa', cursive; }
+label {
+    color: #171A21;
+}
 
+.nav-extended {
+    background-color: #617073;
+}
+
+.my-pantry {
+    background-color: #7A93AC;
+    height: 100%;
+}
+
+.food-storage {
+    background-color: #92BCEA;
+    height: 100%;
+}
