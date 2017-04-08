@@ -132,6 +132,7 @@ $(document).ready(function() {
         $(newFigure).append(newImage);
 
         var cardContent = $("<div>");
+        $(cardContent).addClass("card-content")
         $(cardContent).append('<span class="card-title activator grey-text text-darken-4">' + recipeData.title + '<i class="material-icons right">more_vert</i></span>');
 
         $(cardContent).append('<p>Cooking Time : ' + recipeData.readyInMinutes + '</p>');
@@ -308,16 +309,22 @@ $(document).ready(function() {
         $(this.parentElement).data("id");
     });
 
-
     $("body").on("click", "#searchForRecipes", function() {
+        // write to local storage
         var arrSelected = [];
         var selected = $("input[class^='pantryItemHere']:checked")
         for (var index = 0; index < selected.length; index++) {
             arrSelected.push(selected[index].name);
         }
-        getData(arrSelected.toString());
+        localStorage.setItem("ingedients", arrSelected.toString());
+        window.location.href = "assets/html/recipe.html"
 
     });
+
+    if (window.location.pathname.includes("recipe.html")) {
+        getData(localStorage.getItem("ingedients"));
+        localStorage.clear();
+    }
 
     $(".searchDeleteButton").hide();
     var database = firebase.database();
@@ -325,7 +332,7 @@ $(document).ready(function() {
     var addToMainPantryPage = [];
 
     displayPantryItemsOnPage(pantry);
-
+    getData("carrot,beef,mushroom");
 
     $(document).on("click", ".pantryItemHere", function() {
         if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").fadeIn(); } else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").fadeOut(); }
