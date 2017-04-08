@@ -1,35 +1,55 @@
 $(document).ready(function() {
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
-      authDomain: "whatscooking-cb33d.firebaseapp.com",
-      databaseURL: "https://whatscooking-cb33d.firebaseio.com",
-      projectId: "whatscooking-cb33d",
-      storageBucket: "whatscooking-cb33d.appspot.com",
-      messagingSenderId: "296059627382"
+        apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
+        authDomain: "whatscooking-cb33d.firebaseapp.com",
+        databaseURL: "https://whatscooking-cb33d.firebaseio.com",
+        projectId: "whatscooking-cb33d",
+        storageBucket: "whatscooking-cb33d.appspot.com",
+        messagingSenderId: "296059627382"
     };
     firebase.initializeApp(config);
 
     var database = firebase.database();
-    
+
     var pantryObj = {
-      "Bacon": "Meat", "Chicken": "Meat", "Ground Beef": "Meat", "Ground Turkey": "Meat", "Ham": "Meat", "Pork Loin": "Meat",
-      "Ribeye": "Meat", "Ribs": "Meat", "Rump Roast": "Meat", "Beef": "Meat", 
+        "Bacon": "Meat",
+        "Chicken": "Meat",
+        "Ground Beef": "Meat",
+        "Ground Turkey": "Meat",
+        "Ham": "Meat",
+        "Pork Loin": "Meat",
+        "Ribeye": "Meat",
+        "Ribs": "Meat",
+        "Rump Roast": "Meat",
+        "Beef": "Meat",
 
-      "Salmon": "Seafood",
+        "Salmon": "Seafood",
 
-      "Broccoli": "Produce", "Cauliflower": "Produce", "Carrot": "Produce", "Corn": "Produce", "Lettuce": "Produce", "Onion": "Produce",
-      "Potato": "Produce", "Tomato": "Produce", "Leek": "Produce", "Garlic": "Produce", "Lemon": "Produce", "Cucumber": "Produce",
+        "Broccoli": "Produce",
+        "Cauliflower": "Produce",
+        "Carrot": "Produce",
+        "Corn": "Produce",
+        "Lettuce": "Produce",
+        "Onion": "Produce",
+        "Potato": "Produce",
+        "Tomato": "Produce",
+        "Leek": "Produce",
+        "Garlic": "Produce",
+        "Lemon": "Produce",
+        "Cucumber": "Produce",
 
-      "Black Olives": "Canned and Jarred",
+        "Black Olives": "Canned and Jarred",
 
-      "Cheddar Cheese": "Cheese",
+        "Cheddar Cheese": "Cheese",
 
-      "Eggs": "Milk, Eggs, Other Dairy", "Milk": "Milk, Eggs, Other Dairy", "Butter": "Milk, Eggs, Other Dairy",
+        "Eggs": "Milk, Eggs, Other Dairy",
+        "Milk": "Milk, Eggs, Other Dairy",
+        "Butter": "Milk, Eggs, Other Dairy",
 
-      "Rice": "Pasta and Rice"
+        "Rice": "Pasta and Rice"
     };
-    
+
     var pantry = [];
     var addToPandorasPantry = [];
     $("#emptyPantry").hide();
@@ -64,11 +84,11 @@ $(document).ready(function() {
             }
         }).done(function(recipe) {
             if (recipe.instructions) {
-              console.log(recipe);
+                console.log(recipe);
                 var recipeIngredients = [];
                 for (var i = 0; i < recipe.extendedIngredients.length; i++) {
                     recipeIngredients.push(recipe.extendedIngredients[i].name);
-                    
+
                 }
                 // compareIngredients(ingredients, recipeIngredients);
                 layoutRecipeCard(recipe);
@@ -76,6 +96,11 @@ $(document).ready(function() {
         });
     }
 
+    function testIngredients(supplied, required) {
+        if (required.search(supplied) >= 0) {
+            return true;
+        }
+    }
 
     function compareIngredients(pantry, recipe) {
         console.log("pantry: " + pantry);
@@ -131,6 +156,149 @@ $(document).ready(function() {
         $(parent).append(cardParent);
     }
 
+    function displayPantryItemsOnPage(pantry) {
+        database.ref().on("value", function(snapshot) {
+
+            if (snapshot.child("pantry").exists()) {
+                $("#emptyPantry").hide();
+                $("#pantryItemsonMainPage").empty();
+                addToMainPantryPage = snapshot.val().pantry;
+                addToMainPantryPage = addToMainPantryPage.sort();
+
+                for (var i = 0; i < addToMainPantryPage.length; i++) {
+                    var parent = $("#pantryItemsonMainPage");
+                    var checkbox = $("<div>")
+                    var input = $("<input>");
+                    $(input).attr("type", "checkbox");
+                    $(input).attr("id", "item" + i);
+                    $(input).addClass("pantryItemHere");
+                    $(input).attr("name", addToMainPantryPage[i]);
+                    var label = $("<label>");
+                    $(label).attr("for", "item" + i);
+                    $(label).text(addToMainPantryPage[i]);
+                    $(checkbox).append(input);
+                    $(checkbox).append(label);
+                    $(parent).append(checkbox);
+                }
+            } else {
+                $("#emptyPantry").show();
+                $("#pantryItemsonMainPage").empty();
+            }
+        });
+    }
+
+    function goIntoPantry() {
+        $(".addToPantryButton").hide();
+        var arrIngred = [];
+        var newIngred = [];
+        var checkedButtons = $("input[id^='item']:checked");
+
+        for (var i = 0; i < checkedButtons.length; i++) {
+            arrIngred.push(checkedButtons[i].name);
+        }
+        // This combines the firebase array with the new array from what the user selected.
+        var newArray = arrIngred.concat(addToPandorasPantry);
+        // This sets the new array in firebase
+        database.ref().set({ pantry: newArray });
+    }
+
+    // This displays Pandora's pantry items on the left-hand side of the page.
+    // Any item in the pantry will not be displayed on the storage section (right-hand side).
+    function displayPandorasPantry(pantry) {
+
+        database.ref().on("value", function(snapshot) {
+            var meatStorage = [];
+            var seafoodStorage = [];
+            var produceStorage = [];
+            var cannedStorage = [];
+            var cheeseStorage = [];
+            var dairyStorage = [];
+            var pastaRiceStorage = [];
+            // This tests to make sure there is something in the firebase.
+            if (snapshot.child("pantry").exists()) {
+                $(".itemGoods2").empty();
+                addToPandorasPantry = snapshot.val().pantry;
+                addToPandorasPantry = addToPandorasPantry.sort();
+
+                for (var j = 0; j < addToPandorasPantry.length; j++) {
+                    var parent2 = $("#pandorasPantryItems");
+                    var checkbox2 = $("<div>")
+                    var label2 = $("<label>");
+                    $(label2).css({ "line-height": "25px", "font-size": "1rem" });
+                    $(label2).text(addToPandorasPantry[j]);
+                    $(checkbox2).append(label2);
+                    $(parent2).append(checkbox2);
+                }
+            } else {
+
+                addToPandorasPantry = [];
+                arrIngred = [];
+            }
+            $(".itemGoods").empty();
+            // attempt to use pantryObj
+            for (var food in pantryObj) {
+                switch (pantryObj[food]) {
+                    case "Meat":
+                        meatStorage.push(food);
+                        break;
+                    case "Seafood":
+                        seafoodStorage.push(food);
+                        break;
+                    case "Produce":
+                        produceStorage.push(food);
+                        break;
+                    case "Canned and Jarred":
+                        cannedStorage.push(food);
+                        break;
+                    case "Cheese":
+                        cheeseStorage.push(food);
+                        break;
+                    case "Milk, Eggs, Other Dairy":
+                        dairyStorage.push(food);
+                        break;
+                    case "Pasta and Rice":
+                        pastaRiceStorage.push(food);
+                        break;
+                }
+            }
+            displayStorage(meatStorage, $("#meat-storage"), 0);
+            displayStorage(seafoodStorage, $("#seafood-storage"), 20);
+            displayStorage(produceStorage, $("#produce-storage"), 40);
+            displayStorage(cannedStorage, $("#canned-storage"), 60);
+            displayStorage(cheeseStorage, $("#cheese-storage"), 80);
+            displayStorage(dairyStorage, $("#dairy-storage"), 100);
+
+            // displayColdStorage(coldStorage);
+            // displayMeatStorage(meatStorage);
+            // displayProduceStorage(produceStorage);
+            // displayDryGoodsStorage(dryGoodsStorage);
+            // displaySpiceStorage(spiceStorage);
+        });
+    }
+
+
+    function displayStorage(arr, newDiv, num) {
+        var parent = newDiv;
+        for (var i = 0; i < arr.length; i++) {
+            if ($.inArray(arr[i], addToPandorasPantry) !== -1) {} else {
+                var checkbox = $("<div>");
+                var input = $("<input>");
+                $(input).attr("type", "checkbox");
+                $(input).attr("id", "item" + num);
+                $(input).addClass("pantryItemClicked");
+                $(input).attr("name", arr[i]);
+                var label = $("<label>");
+                $(label).attr("for", "item" + num);
+                $(label).text(arr[i]);
+                $(checkbox).append(input);
+                $(checkbox).append(label);
+                $(parent).append(checkbox);
+                num++;
+            }
+        }
+    }
+
+
     getData("Rice");
     getData("Basil");
 
@@ -140,13 +308,6 @@ $(document).ready(function() {
         $(this.parentElement).data("id");
     });
 
-// This js is for index.html
-// This js is for index.html
-// This js is for index.html
-
-    
-    
- 
     $(".searchDeleteButton").hide();
     var database = firebase.database();
     var pantry = [];
@@ -154,180 +315,26 @@ $(document).ready(function() {
 
     displayPantryItemsOnPage(pantry);
 
- function displayPantryItemsOnPage(pantry) {
-    database.ref().on("value", function(snapshot) {
 
-    if ( snapshot.child("pantry").exists() ) {
-        $("#emptyPantry").hide();
-        $("#pantryItemsonMainPage").empty();
-        addToMainPantryPage = snapshot.val().pantry;
-        addToMainPantryPage = addToMainPantryPage.sort();
-         
-      for (var i = 0; i < addToMainPantryPage.length; i++) {
-        var parent = $("#pantryItemsonMainPage");
-        var checkbox = $("<div>")
-          var input = $("<input>");
-          $(input).attr("type", "checkbox");
-          $(input).attr("id", "item" + i);
-          $(input).addClass("pantryItemHere");
-          $(input).attr("name", addToMainPantryPage[i]);
-          var label = $("<label>");
-          $(label).attr("for", "item" + i);
-          $(label).text(addToMainPantryPage[i]);
-          $(checkbox).append(input);
-          $(checkbox).append(label);
-          $(parent).append(checkbox);
-        }
-      }
-      else { $("#emptyPantry").show();
-             $("#pantryItemsonMainPage").empty(); }
+    $(document).on("click", ".pantryItemHere", function() {
+        if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").fadeIn(); } else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").fadeOut(); }
     });
-  }
 
-  $(document).on("click", ".pantryItemHere", function(){
-    if ( $(".pantryItemHere").is(":checked") === true ) { $(".searchDeleteButton").fadeIn(); }
-    else if ( $(".pantryItemHere").is(":checked") === false ) { $(".searchDeleteButton").fadeOut(); }
-  });
-// End of js for index.html
-// End of js for index.html
-// End of js for index.html
+    // This runs whenevr a box(es) is clicked and when they are unclicked
+    $(document).on("click", ".pantryItemClicked", function() {
+        if ($(".pantryItemClicked").is(":checked") === true) { $(".addToPantryButton").fadeIn(); } else if ($(".pantryItemClicked").is(":checked") === false) { $(".addToPantryButton").fadeOut(); }
+    });
 
-
-
-// This js is for pantry.html
-// This js is for pantry.html
-// This js is for pantry.html
-  
-
-  // This runs whenevr a box(es) is clicked and when they are unclicked
-  $(document).on("click", ".pantryItemClicked", function(){
-    if ( $(".pantryItemClicked").is(":checked") === true ) { $(".addToPantryButton").fadeIn(); }
-    else if ( $(".pantryItemClicked").is(":checked") === false ) { $(".addToPantryButton").fadeOut(); }
-  });
-
-  $(".addToPantryButton").hide();
-
-  displayPandorasPantry(pantry);
-
-  function goIntoPantry() {
     $(".addToPantryButton").hide();
-    var arrIngred = [];
-    var newIngred = [];
-    var checkedButtons = $("input[id^='item']:checked");
 
-    for (var i = 0; i < checkedButtons.length; i++) {
-      arrIngred.push(checkedButtons[i].name);
-    }
-    // This combines the firebase array with the new array from what the user selected.
-    var newArray = arrIngred.concat(addToPandorasPantry);
-    // This sets the new array in firebase
-    database.ref().set({ pantry: newArray });
-  }
+    displayPandorasPantry(pantry);
 
-  // This displays Pandora's pantry items on the left-hand side of the page.
-  // Any item in the pantry will not be displayed on the storage section (right-hand side).
-  function displayPandorasPantry(pantry) {
-      
-      database.ref().on("value", function(snapshot) {
-        var meatStorage = [];
-        var seafoodStorage = [];
-        var produceStorage = [];
-        var cannedStorage = [];
-        var cheeseStorage = [];
-        var dairyStorage = [];
-        var pastaRiceStorage = [];
-      // This tests to make sure there is something in the firebase.
-      if ( snapshot.child("pantry").exists() ) {
-        $(".itemGoods2").empty();
-        addToPandorasPantry = snapshot.val().pantry;
-        addToPandorasPantry = addToPandorasPantry.sort();
-         
-        for (var j = 0; j < addToPandorasPantry.length; j++) {
-          var parent2 = $("#pandorasPantryItems");
-          var checkbox2 = $("<div>")
-          var label2 = $("<label>");
-          $(label2).css({"line-height":"25px","font-size":"1rem"});
-          $(label2).text(addToPandorasPantry[j]);
-          $(checkbox2).append(label2);
-          $(parent2).append(checkbox2);
-        }
-      }
-      else {  
-          
-          addToPandorasPantry = [];
-          arrIngred = []; }
-          $(".itemGoods").empty();
-          // attempt to use pantryObj
-          for (var food in pantryObj) {
-            switch (pantryObj[food]) {
-              case "Meat":
-                meatStorage.push(food);
-                break;
-              case "Seafood":
-                seafoodStorage.push(food);
-                break;
-              case "Produce":
-                produceStorage.push(food);
-                break;
-              case "Canned and Jarred":
-                cannedStorage.push(food);
-                break;
-              case "Cheese":
-                cheeseStorage.push(food);
-                break;
-              case "Milk, Eggs, Other Dairy":
-                dairyStorage.push(food);
-                break;
-              case "Pasta and Rice":
-                pastaRiceStorage.push(food);
-                break;
-            }
-          }
-          displayStorage(meatStorage, $("#meat-storage"), 0);
-          displayStorage(seafoodStorage, $("#seafood-storage"), 20);
-          displayStorage(produceStorage, $("#produce-storage"), 40);
-          displayStorage(cannedStorage, $("#canned-storage"), 60);
-          displayStorage(cheeseStorage, $("#cheese-storage"), 80);
-          displayStorage(dairyStorage, $("#dairy-storage"), 100);
-
-          // displayColdStorage(coldStorage);
-          // displayMeatStorage(meatStorage);
-          // displayProduceStorage(produceStorage);
-          // displayDryGoodsStorage(dryGoodsStorage);
-          // displaySpiceStorage(spiceStorage);
+    // This runs when the user selects some items and presses the "Add to My Pantry" button.
+    // Might add a modal later on if the user does not select anything.
+    $("#addToMyPantry").on("click", function(event) {
+        event.preventDefault();
+        goIntoPantry();
     });
-  }
 
-  // This runs when the user selects some items and presses the "Add to My Pantry" button.
-  // Might add a modal later on if the user does not select anything.
-  $("#addToMyPantry").on("click", function(event) {
-      event.preventDefault();
-      goIntoPantry();
-  });
-
-  function displayStorage(arr, newDiv, num) {
-    var parent = newDiv;
-    for (var i = 0; i < arr.length; i++) {
-      if( $.inArray(arr[i], addToPandorasPantry) !== -1 ) {}
-      else {
-        var checkbox = $("<div>");
-        var input = $("<input>");
-        $(input).attr("type", "checkbox");
-        $(input).attr("id", "item" + num);
-        $(input).addClass("pantryItemClicked");
-        $(input).attr("name", arr[i]);
-        var label = $("<label>");
-        $(label).attr("for", "item" + num);
-        $(label).text(arr[i]);
-        $(checkbox).append(input);
-        $(checkbox).append(label);
-        $(parent).append(checkbox); 
-        num++;
-      }
-    }
-  }
-// End of js for pantry.html
-// End of js for pantry.html
-// End of js for pantry.html
 
 });
