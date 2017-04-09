@@ -1,7 +1,6 @@
 body { 
     font-family: 'Salsa', cursive; 
-    color: #171A21;
-    background-color: #7A93AC;
+    background-color: #617073;
 }
 
 h3 {
@@ -9,11 +8,15 @@ h3 {
 }
 
 label {
-    color: #171A21;
+    color: #fff;
+}
+
+[type="checkbox"]+label:before, [type="checkbox"]:not(.filled-in)+label:after {
+    border-color: #fff;
 }
 
 .nav-extended {
-    background-color: #617073;
+    background-color: #171A21;
 }
 
 .my-pantry {
