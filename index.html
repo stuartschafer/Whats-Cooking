@@ -30,18 +30,22 @@
     
     <div class="container">
         <div class="section">
-
             <div class="row">
-                <div class="col s12 m4" id="pantryItemsonMainPage"></div>
+                <div class="col s12 m6">
+                    <div class="card my-pantry darken-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">Your Pantry</span>
+                            <hr>
+                            <p id="pantryItemsonMainPage"></p>
+                        </div>
+                        <div class="card-action">
+                            <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="searchForRecipes">Search For Recipes<i class="material-icons right">send</i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <img id="emptyPantry" src="assets/misc/empty_pantry.jpg"></div>
-
-            <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="deleteFromPantry">Delete from My Pantry<i class="material-icons right">send</i>
-            </button>
-
-            <button class="btn waves-effect waves-light searchDeleteButton" type="submit" name="action" id="searchForRecipes">Search For Recipes<i class="material-icons right">send</i>
-            </button>
+            <img id="emptyPantry" src="assets/misc/empty_pantry.jpg"></div>       
 
         </div>
     </div>
