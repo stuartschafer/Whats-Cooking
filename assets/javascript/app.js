@@ -50,13 +50,15 @@
      firebase.initializeApp(config);
 
      var database = firebase.database();
-     var pantry = [];
      var addToPandorasPantry = [];
      $("#emptyPantry").hide();
      var ingredients = [];
+     var missingIngredients = [];
+     var suppliedIngredients = [];
+     var shoppingCartTrigger = false;
 
      function getData(query) {
-         var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&limitLicense=true&number=5&ranking=1&ingredients=" + query;
+         var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&limitLicense=true&number=5&ranking=1&ingredients=" + query;
          ingredients = query.split(",");
 
          $.ajax({
@@ -66,7 +68,7 @@
                  xhr.setRequestHeader("X-Mashape-Authorization", "Jn8goME99rmshWQrcQDNuZ9e7TN8p1FXY71jsnp6yW4jmAtQuu");
              }
          }).done(function(response) {
-             console.log(response);
+             //  console.log(response);
              for (var i = 0; i < response.length; i++) {
                  getRecipe(response[i].id);
              }
@@ -84,14 +86,18 @@
              }
          }).done(function(recipe) {
              if (recipe.instructions) {
-                 console.log(recipe);
+                 //  console.log(recipe);
                  var recipeIngredients = [];
                  for (var i = 0; i < recipe.extendedIngredients.length; i++) {
-                     recipeIngredients.push(recipe.extendedIngredients[i].name);
-
+                     recipeIngredients.push(recipe.extendedIngredients[i]);
                  }
-                 // compareIngredients(ingredients, recipeIngredients);
+                 compareIngredients(recipeIngredients);
                  layoutRecipeCard(recipe);
+                 if (shoppingCartTrigger) {
+                     shoppingCartTrigger = false;
+                     $("#selected").hide()
+                     layoutShoppingCard(recipe);
+                 }
              }
          });
      }
@@ -102,17 +108,44 @@
          }
      }
 
-     function compareIngredients(pantry, recipe) {
-         console.log("pantry: " + pantry);
-         console.log("recipe: " + recipe);
-         var missingIngredients = [];
+     function compareIngredients(recipe) {
+         missingIngredients = [];
+         suppliedIngredients = [];
+         database.ref().on("value", function(snapshot) {
+             if (snapshot.child("pantry").exists()) {
+                 pantryItems = snapshot.val().pantry;
+             }
+         });
+         //  console.log("pantry: " + pantryItems);
+         //  console.log("recipe: " + recipe);
+         var foundIngredient = false;
 
          for (var i = 0; i < recipe.length; i++) {
-             if ($.inArray(recipe[i], pantry) === -1) {
-                 missingIngredients.push(recipe[i]);
+
+             for (var j = 0; j < pantryItems.length; j++) {
+
+                 if (recipe[i].name.toUpperCase().includes(pantryItems[j].toUpperCase())) {
+                     //  console.log(recipe[i].name.toUpperCase());
+                     //  console.log(pantryItems[j].toUpperCase());
+                     if (recipe[i].aisle.toUpperCase() === pantryObj[pantryItems[j]].toUpperCase()) {
+                         //  console.log(recipe[i].aisle.toUpperCase());
+                         //  console.log(pantryObj[pantryItems[j]].toUpperCase());
+                         foundIngredient = true;
+                         suppliedIngredients.push(recipe[i].name);
+                     }
+                 }
+             }
+             if (foundIngredient) {
+                 foundIngredient = false;
+             } else
+
+             {
+                 if (missingIngredients.indexOf(recipe[i].name) < 0) {
+                     missingIngredients.push(recipe[i].name);
+                 }
              }
          }
-         console.log(missingIngredients);
+         //  console.log(missingIngredients);
      }
 
      function layoutRecipeCard(recipeData) {
@@ -121,7 +154,7 @@
          $(cardParent).addClass("col s12 m6");
 
          var card = $("<div>");
-         $(card).addClass("card");
+         $(card).addClass("card layout");
 
          var newFigure = $("<div>");
          $(newFigure).addClass("card-image waves-effect waves-block waves-light");
@@ -138,6 +171,7 @@
          $(cardContent).append('<p>Cooking Time : ' + recipeData.readyInMinutes + '</p>');
          $(cardContent).append('<p>Servings : ' + recipeData.servings + '</p>');
          $(cardContent).append('<p>Score : ' + recipeData.spoonacularScore + '</p>');
+         $(cardContent).append('<p>Missing Items : ' + missingIngredients.length + '</p>');
 
          var cardAction = $("<div>");
          $(cardAction).addClass("card-action");
@@ -158,7 +192,44 @@
          $(parent).append(cardParent);
      }
 
-     function displayPantryItemsOnPage(pantry) {
+     function layoutShoppingCard(recipeData) {
+         var parent = $("#recipeData");
+         var cardParent = $("<div>");
+         $(cardParent).addClass("col s12 m6");
+
+         var card = $("<div>");
+         $(card).addClass("card");
+
+         var newFigure = $("<div>");
+         $(newFigure).addClass("card-image waves-effect waves-block waves-light");
+         var cardContent = $("<div>");
+         $(cardContent).addClass("card-content")
+         $(cardContent).append('<span class="card-title grey-text text-darken-4">' + recipeData.title + '</span>');
+
+         $(cardContent).append('<h3> Items to purchase :- </h3>');
+         for (var i = 0; i < missingIngredients.length; i++) {
+             num = i + 1;
+             $(cardContent).append('<p>' + num + " : " + missingIngredients[i] + '</p>');
+         }
+
+         $(cardContent).append('<h3> Supplied items :- </h3>');
+         for (var i = 0; i < suppliedIngredients.length; i++) {
+             num = i + 1;
+             $(cardContent).append('<p>' + num + " : " + suppliedIngredients[i] + '</p>');
+         }
+         $(cardContent).append('<h3> Instructions :- </h3>');
+         $(cardContent).append(recipeData.instructions);
+         var cardAction = $("<div>");
+         $(cardAction).addClass("card-action");
+         $(cardAction).append('<a class="waves-effect waves-light btn-large" id="returnResults">Return to results</a>');
+         $(cardAction).attr("data-id", recipeData.id);
+         $(card).append(cardContent);
+         $(card).append(cardAction);
+         $(cardParent).append(card);
+         $(parent).append(cardParent);
+     }
+
+     function displayPantryItemsOnPage() {
          database.ref().on("value", function(snapshot) {
 
              if (snapshot.child("pantry").exists()) {
@@ -206,7 +277,7 @@
 
      // This displays Pandora's pantry items on the left-hand side of the page.
      // Any item in the pantry will not be displayed on the storage section (right-hand side).
-     function displayPandorasPantry(pantry) {
+     function displayPandorasPantry() {
 
          database.ref().on("value", function(snapshot) {
              var meatStorage = [];
@@ -299,15 +370,11 @@
          }
      }
 
-     function getMissingIngredients() {
-
-
-     }
-
 
      $("body").on("click", "#selected", function() {
-
-         $(this.parentElement).data("id");
+         shoppingCartTrigger = true;
+         $("#recipeData").empty();
+         getRecipe($(this.parentElement).data("id"));
      });
 
      $("body").on("click", "#searchForRecipes", function() {
@@ -327,13 +394,17 @@
 
      }
 
+     $("body").on("click", "#returnResults", function() {
+         $("#recipeData").empty();
+         getData(localStorage.getItem("ingredients"));
+     });
+
      $(".searchDeleteButton").hide();
      var database = firebase.database();
-     var pantry = [];
      var addToMainPantryPage = [];
 
-     displayPantryItemsOnPage(pantry);
-     getData("carrot,beef,mushroom");
+     displayPantryItemsOnPage();
+
 
      $(document).on("click", ".pantryItemHere", function() {
          if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").fadeIn(); } else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").fadeOut(); }
@@ -346,7 +417,7 @@
 
      $(".addToPantryButton").hide();
 
-     displayPandorasPantry(pantry);
+     displayPandorasPantry();
 
      // This runs when the user selects some items and presses the "Add to My Pantry" button.
      // Might add a modal later on if the user does not select anything.
@@ -374,7 +445,7 @@
              var index = arrIngred.indexOf(remIngred[j]);
              arrIngred.splice(index, 1);
          }
-         console.log(arrIngred);
-         console.log(remIngred);
+         //  console.log(arrIngred);
+         //  console.log(remIngred);
      });
  });
