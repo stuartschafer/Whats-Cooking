@@ -4,7 +4,10 @@
   	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>What's Cooking</title>
-  
+    <!-- JQuery link -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- Material link (for CSS/new technology/library) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
     <!-- Materialize link for icons -->
@@ -21,6 +24,11 @@
             <a href="#" class="brand-logo center">What's Cookin'?</a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="assets/html/pantry.html">Pantry</a></li>
+                <li><a href="assets/html/recipe.html">Recipes</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="assets/html/pantry.html">Pantry</a></li>
                 <li><a href="assets/html/recipe.html">Recipes</a></li>
@@ -52,8 +60,6 @@
 
     <!-- Link to firebase -->
     <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-    <!-- JQuery link -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <!-- JS link -->
     <script type="text/javascript" src="assets/javascript/app.js"></script>
 </body>
