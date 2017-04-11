@@ -16,6 +16,8 @@ var pantryObj = {
     "Beef": "Meat",
 
     "Salmon": "Seafood",
+    "Shrimp": "Seafood",
+    "Crab": "Seafood",
 
     "Broccoli": "Produce",
     "Cauliflower": "Produce",
@@ -31,14 +33,21 @@ var pantryObj = {
     "Cucumber": "Produce",
 
     "Black Olives": "Canned and Jarred",
+    "Pickles": "Canned and Jarred",
+    "Salsa": "Canned and Jarred",
 
     "Cheddar Cheese": "Cheese",
+    "American Cheese": "Cheese",
+    "Provolone": "Cheese",
+    "Swiss Cheese": "Cheese",
+    "Havarti": "Cheese",
 
     "Eggs": "Milk, Eggs, Other Dairy",
     "Milk": "Milk, Eggs, Other Dairy",
     "Butter": "Milk, Eggs, Other Dairy",
 
-    "Rice": "Pasta and Rice"
+    "Rice": "Pasta and Rice",
+    "Pasta": "Pasta and Rice"
 };
 
 
@@ -59,6 +68,8 @@ $(document).ready(function() {
     var missingIngredients = [];
     var suppliedIngredients = [];
     var shoppingCartTrigger = false;
+
+    $(".button-collapse").sideNav();
 
     function getData(query) {
         var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&limitLicense=true&number=5&ranking=1&ingredients=" + query;
@@ -279,25 +290,25 @@ $(document).ready(function() {
     }
 
 //  
-function deleteFromPantry() {
-        $(".addToPantryButton").hide();
-        $("#removeFromPantry").hide();
-        var removeArray = [];
-        var newIngred = [];
-        var removeItems = $("input[id^='item']:checked");
+    function deleteFromPantry() {
+    $(".addToPantryButton").hide();
+    $("#removeFromPantry").hide();
+    var removeArray = [];
+    var newIngred = [];
+    var removeItems = $("input[id^='item']:checked");
         
-        for (var i = 0; i < removeItems.length; i++) {
+    for (var i = 0; i < removeItems.length; i++) {
             removeArray.push(removeItems[i].name);
         }
 
-            for (var j = addToPandorasPantry.length; j > -1; j--) {
+    for (var j = addToPandorasPantry.length; j > -1; j--) {
                 if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} 
                 else { addToPandorasPantry.splice(j,1); }
             }
-            database.ref().set({ pantry: addToPandorasPantry });
-            $("#pandorasPantryItems").empty();
-            displayPandorasPantry();
-    }
+    database.ref().set({ pantry: addToPandorasPantry });
+    $("#pandorasPantryItems").empty();
+    displayPandorasPantry();
+}
 
     // This displays Pandora's pantry items on the left-hand side of the page.
     // Any item in the pantry will not be displayed on the storage section (right-hand side).
@@ -341,27 +352,27 @@ function deleteFromPantry() {
             // attempt to use pantryObj
             for (var food in pantryObj) {
                 switch (pantryObj[food]) {
-                    case "Meat":
-                        meatStorage.push(food);
-                        break;
-                    case "Seafood":
-                        seafoodStorage.push(food);
-                        break;
-                    case "Produce":
-                        produceStorage.push(food);
-                        break;
-                    case "Canned and Jarred":
-                        cannedStorage.push(food);
-                        break;
-                    case "Cheese":
-                        cheeseStorage.push(food);
-                        break;
-                    case "Milk, Eggs, Other Dairy":
-                        dairyStorage.push(food);
-                        break;
-                    case "Pasta and Rice":
-                        pastaRiceStorage.push(food);
-                        break;
+                case "Meat":
+                    meatStorage.push(food);
+                    break;
+                case "Seafood":
+                    seafoodStorage.push(food);
+                    break;
+                case "Produce":
+                    produceStorage.push(food);
+                    break;
+                case "Canned and Jarred":
+                    cannedStorage.push(food);
+                    break;
+                case "Cheese":
+                    cheeseStorage.push(food);
+                    break;
+                case "Milk, Eggs, Other Dairy":
+                    dairyStorage.push(food);
+                    break;
+                case "Pasta and Rice":
+                    pastaRiceStorage.push(food);
+                    break;
                 }
             }
             displayStorage(meatStorage, $("#meat-storage"), 0);

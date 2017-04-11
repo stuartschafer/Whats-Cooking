@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>What's Cooking</title>
-
+    <!-- JQuery link -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- Material link (for CSS/new technology/library) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
     <!-- Materialize link for icons -->
@@ -26,56 +29,71 @@
                 <li><a href="pantry.html">Pantry</a></li>
                 <li><a href="recipe.html">Recipes</a></li>
             </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="pantry.html">Pantry</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
+            </ul>
         </div>
     </nav>
 
-    <div class="row center-align">
+    <div class="row left-align">
 
         <!-- This section is for Pandora's pantry -->
-        <div class="col s2 my-pantry">
-            <span class="flow-text">Pandora's Pantry</span>
-            <div id="pandorasPantryItems" class="left-align itemGoods2"></div>
+        <div class="col m3 s12 card my-pantry">
+            <div class="card-content">
+                <span class="card-title">Pandora's Pantry</span>
+                <div class="row">
+                    <div class="col s12">
+                        <h6>Your Items</h6>
+                        <div id="pandorasPantryItems" class="left-align itemGoods2"></div><br>
+                        <button class="btn waves-effect waves-light removeFromPantryButton" type="submit" name="action" id="removeFromPantry">Delete from Pantry<i class="material-icons left">delete_sweep</i></button>
+                    </div>
+                </div>
+            </div>    
         </div>
 
         <!-- This section is for all items available in storage -->
-        <div class="col s10 food-storage">
-            <span class="flow-text">Available Ingredients</span><br>
-
-            <div class="col s2">
-                <h6>Meats</h6>
-                <div id="meat-storage" class="left-align itemGoods"></div>
-            </div>
-            <div class="col s2">
-                <h6>Seafood</h6>
-                <div id="seafood-storage" class="left-align itemGoods"></div>
-            </div>
-            <div class="col s2">
-                <h6>Produce</h6>
-                <div id="produce-storage" class="left-align itemGoods"></div>
-            </div>
-            <div class="col s2">
-                <h6>Canned and Jarred</h6>
-                <div id="canned-storage" class="left-align itemGoods"></div>
-            </div>
-            <div class="col s2">
-                <h6>Cheeses</h6>
-                <div id="cheese-storage" class="left-align itemGoods"></div>
-            </div>
-            <div class="col s2">
-                <h6>Dairy</h6>
-                <div id="dairy-storage" class="left-align itemGoods"></div>
+        <div class="col m9 s12 food-storage card">
+            <div class="card-content">
+                <span class="card-title">Available Ingredients</span>
+                <div class="row">
+                    <div class="col l2 m4 s12">
+                        <h6>Meats</h6>
+                        <div id="meat-storage" class="left-align itemGoods"></div>
+                    </div>
+                    <div class="col l2 m4 s12">
+                        <h6>Seafood</h6>
+                        <div id="seafood-storage" class="left-align itemGoods"></div>
+                    </div>
+                    <div class="col l2 m4 s12">
+                        <h6>Produce</h6>
+                        <div id="produce-storage" class="left-align itemGoods"></div>
+                    </div>
+                    <div class="col l2 m4 s12">
+                        <h6>Canned/Jarred</h6>
+                        <div id="canned-storage" class="left-align itemGoods"></div>
+                    </div>
+                    <div class="col l2 m4 s12">
+                        <h6>Cheeses</h6>
+                        <div id="cheese-storage" class="left-align itemGoods"></div>
+                    </div>
+                    <div class="col l2 m4 s12">
+                        <h6>Dairy</h6>
+                        <div id="dairy-storage" class="left-align itemGoods"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <button class="btn waves-effect waves-light addToPantryButton" type="submit" name="action" id="addToMyPantry">Add to My Pantry<i class="material-icons right">restaurant</i></button>
+                    </div>
+                </div>
             </div>
         </div>
-        <button class="btn waves-effect waves-light removeFromPantryButton" type="submit" name="action" id="removeFromPantry">Delete from Pantry<i class="material-icons left">delete_sweep</i>
-        </button>
-        <button class="btn waves-effect waves-light addToPantryButton" type="submit" name="action" id="addToMyPantry">Add to My Pantry<i class="material-icons right">restaurant</i>
-        </button>
     </div>
 
     <!-- Link to firebase -->
     <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-    <!-- JQuery link -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <!-- JS link -->
     <script type="text/javascript" src="../javascript/app.js"></script>
 </body>
