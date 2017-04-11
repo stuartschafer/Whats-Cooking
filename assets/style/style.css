@@ -53,3 +53,7 @@ label {
 .layout {
     height: 550px;
 }
+
+.card .card-image img {
+    max-height: 270px;
+}
