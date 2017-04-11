@@ -1,5 +1,5 @@
-body {
-    font-family: 'Salsa', cursive;
+body { 
+    font-family: 'Salsa', cursive; 
     background-color: #617073;
 }
 
@@ -11,14 +11,7 @@ label {
     color: #fff;
 }
 
-img {
-    max-width: 320px;
-    max-height: 240px;
-    margin: auto;
-}
-
-[type="checkbox"]+label:before,
-[type="checkbox"]:not(.filled-in)+label:after {
+[type="checkbox"]+label:before, [type="checkbox"]:not(.filled-in)+label:after {
     border-color: #fff;
 }
 
