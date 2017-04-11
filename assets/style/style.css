@@ -1,5 +1,5 @@
-body { 
-    font-family: 'Salsa', cursive; 
+body {
+    font-family: 'Salsa', cursive;
     background-color: #617073;
 }
 
@@ -11,7 +11,14 @@ label {
     color: #fff;
 }
 
-[type="checkbox"]+label:before, [type="checkbox"]:not(.filled-in)+label:after {
+img {
+    max-width: 320px;
+    max-height: 240px;
+    margin: auto;
+}
+
+[type="checkbox"]+label:before,
+[type="checkbox"]:not(.filled-in)+label:after {
     border-color: #fff;
 }
 
@@ -50,3 +57,6 @@ label {
 
 .addToPantryButton:hover {  background-color: yellow;
                             color: green; }
+.layout {
+    height: 550px;
+}
