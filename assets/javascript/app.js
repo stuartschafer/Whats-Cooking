@@ -1,3 +1,8 @@
+ $("#emptyPantry").hide();
+ $(".searchDeleteButton").hide();
+ $("#removeFromPantry").hide();
+ $(".addToPantryButton").hide();
+      
  var pantryObj = {
      "Bacon": "Meat",
      "Chicken": "Meat",
@@ -51,7 +56,6 @@
 
      var database = firebase.database();
      var addToPandorasPantry = [];
-     $("#emptyPantry").hide();
      var ingredients = [];
      var missingIngredients = [];
      var suppliedIngredients = [];
@@ -262,6 +266,7 @@
 
      function goIntoPantry() {
          $(".addToPantryButton").hide();
+         $("#removeFromPantry").hide();
          var arrIngred = [];
          var newIngred = [];
          var checkedButtons = $("input[id^='item']:checked");
@@ -275,6 +280,25 @@
          database.ref().set({ pantry: newArray });
      }
 
+     function deleteFromPantry() {
+         $(".addToPantryButton").hide();
+         $("#removeFromPantry").hide();
+         var removeArray = [];
+         var newIngred = [];
+         var removeItems = $("input[id^='item']:checked");
+         
+         for (var i = 0; i < removeItems.length; i++) {
+             removeArray.push(removeItems[i].name);
+         }
+ 
+             for (var j = addToPandorasPantry.length; j > -1; j--) {
+                 if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} 
+                 else { addToPandorasPantry.splice(j,1); }
+             }
+             database.ref().set({ pantry: addToPandorasPantry });
+             $("#pandorasPantryItems").empty();
+             displayPandorasPantry(pantry);
+     }
      // This displays Pandora's pantry items on the left-hand side of the page.
      // Any item in the pantry will not be displayed on the storage section (right-hand side).
      function displayPandorasPantry() {
@@ -294,13 +318,19 @@
                  addToPandorasPantry = addToPandorasPantry.sort();
 
                  for (var j = 0; j < addToPandorasPantry.length; j++) {
-                     var parent2 = $("#pandorasPantryItems");
-                     var checkbox2 = $("<div>")
-                     var label2 = $("<label>");
-                     $(label2).css({ "line-height": "25px", "font-size": "1rem" });
-                     $(label2).text(addToPandorasPantry[j]);
-                     $(checkbox2).append(label2);
-                     $(parent2).append(checkbox2);
+                     var parent = $("#pandorasPantryItems");
+                     var checkbox = $("<div>");
+                     var input = $("<input>");
+                     var label = $("<label>");
+                     $(input).attr("type", "checkbox");
+                     $(input).attr("id", "item" + (j+500));
+                     $(input).addClass("removingFromPantry");
+                     $(label).attr("for", "item" + (j+500));
+                     $(input).attr("name", addToPandorasPantry[j]);
+                     $(label).text(addToPandorasPantry[j]);
+                     $(checkbox).append(input);
+                     $(checkbox).append(label);
+                     $(parent).append(checkbox);
                  }
              } else {
 
@@ -350,6 +380,7 @@
      }
 
      function displayStorage(arr, newDiv, num) {
+         arr = arr.sort();
          var parent = newDiv;
          for (var i = 0; i < arr.length; i++) {
              if ($.inArray(arr[i], addToPandorasPantry) !== -1) {} else {
@@ -405,25 +436,45 @@
 
      displayPantryItemsOnPage();
 
-
+     // This will display/hide the "Delete From Pantry" button if a pantry item is clicked/unclicked
+     $(document).on("click", ".removingFromPantry", function() {
+         if ($(".removingFromPantry").is(":checked") === true) { 
+             $(".removeFromPantryButton").show();
+             $(".addToPantryButton").hide();
+             $( ".pantryItemClicked" ).prop( "checked", false ); }
+         else if ($(".removingFromPantry").is(":checked") === false) { $(".removeFromPantryButton").hide(); }
+     });
+   
      $(document).on("click", ".pantryItemHere", function() {
-         if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").fadeIn(); } else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").fadeOut(); }
+         if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").show(); } 
+         else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").hide(); }
      });
 
      // This runs whenevr a box(es) is clicked and when they are unclicked
      $(document).on("click", ".pantryItemClicked", function() {
-         if ($(".pantryItemClicked").is(":checked") === true) { $(".addToPantryButton").fadeIn(); } else if ($(".pantryItemClicked").is(":checked") === false) { $(".addToPantryButton").fadeOut(); }
+         if ($(".pantryItemClicked").is(":checked") === true) { 
+             $(".addToPantryButton").show();
+             $("#removeFromPantry").hide();
+             $( ".removingFromPantry" ).prop( "checked", false ); }
+         else if ($(".pantryItemClicked").is(":checked") === false) { $(".addToPantryButton").hide(); }
      });
+   
+     $("#removeFromPantry").hide();
 
      $(".addToPantryButton").hide();
 
      displayPandorasPantry();
 
      // This runs when the user selects some items and presses the "Add to My Pantry" button.
-     // Might add a modal later on if the user does not select anything.
      $("#addToMyPantry").on("click", function(event) {
          event.preventDefault();
          goIntoPantry();
+     });
+   
+     // This runs when the user deletes something from their pantry.
+     $("#removeFromPantry").on("click", function(event) {
+         event.preventDefault();
+         deleteFromPantry();
      });
 
      // delete button

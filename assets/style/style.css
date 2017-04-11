@@ -36,6 +36,27 @@ img {
     height: 100%;
 }
 
+.pantryItemClicked:checked + label:before {
+  border-right: 2px solid blue;
+  border-bottom: 2px solid blue; }
+
+.removingFromPantry:checked + label:before {
+  border-right: 2px solid red;
+  border-bottom: 2px solid red; }
+
+#removeFromPantry { background-color: red;
+                    float: left;
+                    padding: 0 .5rem; }
+
+#removeFromPantry:hover {  background-color: blue;
+                            color: red; }
+
+
+.addToPantryButton {    background-color: green;
+                        padding: 0 7rem; }
+
+.addToPantryButton:hover {  background-color: yellow;
+                            color: green; }
 .layout {
     height: 550px;
 }
