@@ -277,7 +277,6 @@ $(document).ready(function() {
         $(".addToPantryButton").hide();
         $("#removeFromPantry").hide();
         var arrIngred = [];
-        var newIngred = [];
         var checkedButtons = $("input[id^='item']:checked");
 
         for (var i = 0; i < checkedButtons.length; i++) {
@@ -291,29 +290,27 @@ $(document).ready(function() {
 
 //  
     function deleteFromPantry() {
-    $(".addToPantryButton").hide();
-    $("#removeFromPantry").hide();
-    var removeArray = [];
-    var newIngred = [];
-    var removeItems = $("input[id^='item']:checked");
-        
-    for (var i = 0; i < removeItems.length; i++) {
+        $(".addToPantryButton").hide();
+        $("#removeFromPantry").hide();
+        var removeArray = [];
+        var removeItems = $("input[id^='item']:checked");
+            
+        for (var i = 0; i < removeItems.length; i++) {
             removeArray.push(removeItems[i].name);
         }
 
-    for (var j = addToPandorasPantry.length; j > -1; j--) {
-                if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} 
-                else { addToPandorasPantry.splice(j,1); }
-            }
-    database.ref().set({ pantry: addToPandorasPantry });
-    $("#pandorasPantryItems").empty();
-    displayPandorasPantry();
+        for (var j = addToPandorasPantry.length; j > -1; j--) {
+            if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} 
+            else { addToPandorasPantry.splice(j,1); }
+        }
+        database.ref().set({ pantry: addToPandorasPantry });
+        $("#pandorasPantryItems").empty();
+        displayPandorasPantry();
 }
 
     // This displays Pandora's pantry items on the left-hand side of the page.
     // Any item in the pantry will not be displayed on the storage section (right-hand side).
     function displayPandorasPantry() {
-
         database.ref().on("value", function(snapshot) {
             var meatStorage = [];
             var seafoodStorage = [];
@@ -344,9 +341,7 @@ $(document).ready(function() {
                     $(parent).append(checkbox);
                 }
             } else {
-
                 addToPandorasPantry = [];
-                arrIngred = [];
             }
             $(".itemGoods").empty();
             // attempt to use pantryObj
@@ -381,7 +376,6 @@ $(document).ready(function() {
             displayStorage(cannedStorage, $("#canned-storage"), 60);
             displayStorage(cheeseStorage, $("#cheese-storage"), 80);
             displayStorage(dairyStorage, $("#dairy-storage"), 100);
-
         });
     }
 
@@ -416,18 +410,16 @@ $(document).ready(function() {
     $("body").on("click", "#searchForRecipes", function() {
         // write to local storage
         var arrSelected = [];
-        var selected = $("input[class^='pantryItemHere']:checked")
+        var selected = $("input[class^='pantryItemHere']:checked");
         for (var index = 0; index < selected.length; index++) {
             arrSelected.push(selected[index].name);
         }
         localStorage.setItem("ingredients", arrSelected.toString());
-        window.location.href = "assets/html/recipe.html"
-
+        window.location.href = "assets/html/recipe.html";
     });
 
     if (window.location.pathname.includes("recipe.html")) {
         getData(localStorage.getItem("ingredients"));
-
     }
 
     $("body").on("click", "#returnResults", function() {
@@ -436,7 +428,7 @@ $(document).ready(function() {
     });
 
     $(".searchDeleteButton").hide();
-    var database = firebase.database();
+    database = firebase.database();
     var addToMainPantryPage = [];
 
     displayPantryItemsOnPage();
