@@ -2,7 +2,7 @@ $("#emptyPantry").hide();
 $(".searchDeleteButton").hide();
 $("#removeFromPantry").hide();
 $(".addToPantryButton").hide();
-    
+
 var pantryObj = {
     "Bacon": "Meat",
     "Chicken": "Meat",
@@ -167,7 +167,7 @@ $(document).ready(function() {
         $(cardParent).addClass("col s12 m6");
 
         var card = $("<div>");
-        $(card).addClass("card layout");
+        $(card).addClass("card grey layout");
 
         var newFigure = $("<div>");
         $(newFigure).addClass("card-image waves-effect waves-block waves-light");
@@ -288,25 +288,34 @@ $(document).ready(function() {
         database.ref().set({ pantry: newArray });
     }
 
-//  
+    //
     function deleteFromPantry() {
         $(".addToPantryButton").hide();
         $("#removeFromPantry").hide();
         var removeArray = [];
+
+        var newIngred = [];
         var removeItems = $("input[id^='item']:checked");
-            
+
         for (var i = 0; i < removeItems.length; i++) {
             removeArray.push(removeItems[i].name);
         }
 
         for (var j = addToPandorasPantry.length; j > -1; j--) {
-            if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} 
-            else { addToPandorasPantry.splice(j,1); }
+
+            if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} else { addToPandorasPantry.splice(j, 1); }
+
+            if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} else { addToPandorasPantry.splice(j, 1); }
+
         }
         database.ref().set({ pantry: addToPandorasPantry });
         $("#pandorasPantryItems").empty();
         displayPandorasPantry();
-}
+
+    }
+
+
+
 
     // This displays Pandora's pantry items on the left-hand side of the page.
     // Any item in the pantry will not be displayed on the storage section (right-hand side).
@@ -331,9 +340,9 @@ $(document).ready(function() {
                     var input = $("<input>");
                     var label = $("<label>");
                     $(input).attr("type", "checkbox");
-                    $(input).attr("id", "item" + (j+500));
+                    $(input).attr("id", "item" + (j + 500));
                     $(input).addClass("removingFromPantry");
-                    $(label).attr("for", "item" + (j+500));
+                    $(label).attr("for", "item" + (j + 500));
                     $(input).attr("name", addToPandorasPantry[j]);
                     $(label).text(addToPandorasPantry[j]);
                     $(checkbox).append(input);
@@ -347,27 +356,27 @@ $(document).ready(function() {
             // attempt to use pantryObj
             for (var food in pantryObj) {
                 switch (pantryObj[food]) {
-                case "Meat":
-                    meatStorage.push(food);
-                    break;
-                case "Seafood":
-                    seafoodStorage.push(food);
-                    break;
-                case "Produce":
-                    produceStorage.push(food);
-                    break;
-                case "Canned and Jarred":
-                    cannedStorage.push(food);
-                    break;
-                case "Cheese":
-                    cheeseStorage.push(food);
-                    break;
-                case "Milk, Eggs, Other Dairy":
-                    dairyStorage.push(food);
-                    break;
-                case "Pasta and Rice":
-                    pastaRiceStorage.push(food);
-                    break;
+                    case "Meat":
+                        meatStorage.push(food);
+                        break;
+                    case "Seafood":
+                        seafoodStorage.push(food);
+                        break;
+                    case "Produce":
+                        produceStorage.push(food);
+                        break;
+                    case "Canned and Jarred":
+                        cannedStorage.push(food);
+                        break;
+                    case "Cheese":
+                        cheeseStorage.push(food);
+                        break;
+                    case "Milk, Eggs, Other Dairy":
+                        dairyStorage.push(food);
+                        break;
+                    case "Pasta and Rice":
+                        pastaRiceStorage.push(food);
+                        break;
                 }
             }
             displayStorage(meatStorage, $("#meat-storage"), 0);
@@ -409,6 +418,7 @@ $(document).ready(function() {
 
     $("body").on("click", "#searchForRecipes", function() {
         // write to local storage
+        localStorage.removeItem("ingredients")
         var arrSelected = [];
         var selected = $("input[class^='pantryItemHere']:checked");
         for (var index = 0; index < selected.length; index++) {
@@ -435,25 +445,24 @@ $(document).ready(function() {
 
     // This will display/hide the "Delete From Pantry" button if a pantry item is clicked/unclicked
     $(document).on("click", ".removingFromPantry", function() {
-        if ($(".removingFromPantry").is(":checked") === true) { 
+        if ($(".removingFromPantry").is(":checked") === true) {
             $(".removeFromPantryButton").show();
             $(".addToPantryButton").hide();
-            $( ".pantryItemClicked" ).prop( "checked", false ); }
-        else if ($(".removingFromPantry").is(":checked") === false) { $(".removeFromPantryButton").hide(); }
+            $(".pantryItemClicked").prop("checked", false);
+        } else if ($(".removingFromPantry").is(":checked") === false) { $(".removeFromPantryButton").hide(); }
     });
 
     $(document).on("click", ".pantryItemHere", function() {
-        if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").show(); } 
-        else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").hide(); }
+        if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").show(); } else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").hide(); }
     });
 
     // This runs whenevr a box(es) is clicked and when they are unclicked
     $(document).on("click", ".pantryItemClicked", function() {
-        if ($(".pantryItemClicked").is(":checked") === true) { 
+        if ($(".pantryItemClicked").is(":checked") === true) {
             $(".addToPantryButton").show();
             $("#removeFromPantry").hide();
-            $( ".removingFromPantry" ).prop( "checked", false ); }
-        else if ($(".pantryItemClicked").is(":checked") === false) { $(".addToPantryButton").hide(); }
+            $(".removingFromPantry").prop("checked", false);
+        } else if ($(".pantryItemClicked").is(":checked") === false) { $(".addToPantryButton").hide(); }
     });
 
     $("#removeFromPantry").hide();

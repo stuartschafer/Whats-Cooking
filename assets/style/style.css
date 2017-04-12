@@ -1,5 +1,5 @@
-body { 
-    font-family: 'Salsa', cursive; 
+body {
+    font-family: 'Salsa', cursive;
     background-color: #617073;
 }
 
@@ -17,7 +17,7 @@ img {
     margin: auto;
 }
 
-[type="checkbox"]+label:before, 
+[type="checkbox"]+label:before,
 [type="checkbox"]:not(.filled-in)+label:after {
     border-color: #fff;
 }
@@ -36,25 +36,64 @@ img {
     height: 100%;
 }
 
-.pantryItemClicked:checked + label:before {
-  border-right: 2px solid #26a69a;
-  border-bottom: 2px solid #26a69a; }
-
-.removingFromPantry:checked + label:before {
-  border-right: 2px solid darkred;
-  border-bottom: 2px solid darkred; }
-
-#removeFromPantry { 
-    background-color: darkred;
-    float: left;
-    padding: 0 .5rem; 
+.pantryItemClicked:checked+label:before {
+    border-right: 2px solid blue;
+    border-bottom: 2px solid blue;
 }
 
-#removeFromPantry:hover {  
+.removingFromPantry:checked+label:before {
+    border-right: 2px solid red;
+    border-bottom: 2px solid red;
+}
+
+#removeFromPantry {
     background-color: red;
-    color: #fff; 
+    float: left;
+    padding: 0 .5rem;
+}
+
+#removeFromPantry:hover {
+    background-color: blue;
+    color: red;
+}
+
+.addToPantryButton {
+    background-color: green;
+    padding: 0 7rem;
+}
+
+.addToPantryButton:hover {
+    background-color: yellow;
+    color: green;
+}
+
+.pantryItemClicked:checked+label:before {
+    border-right: 2px solid #26a69a;
+    border-bottom: 2px solid #26a69a;
+}
+
+.removingFromPantry:checked+label:before {
+    border-right: 2px solid darkred;
+    border-bottom: 2px solid darkred;
+}
+
+#removeFromPantry {
+    background-color: darkred;
+    float: left;
+    padding: 0 .5rem;
+}
+
+#removeFromPantry:hover {
+    background-color: red;
+    color: #fff;
 }
 
 .layout {
     height: 550px;
+}
+
+img {
+    max-width: 320px;
+    max-height: 240px;
+    margin: auto;
 }
