@@ -1,8 +1,11 @@
+// initialize html button layout
+
 $("#emptyPantry").hide();
 $(".searchDeleteButton").hide();
 $("#removeFromPantry").hide();
 $(".addToPantryButton").hide();
 
+// initialize base ingredients obj
 var pantryObj = {
     "Bacon": "Meat",
     "Chicken": "Meat",
@@ -50,28 +53,30 @@ var pantryObj = {
     "Pasta": "Pasta and Rice"
 };
 
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
+    authDomain: "whatscooking-cb33d.firebaseapp.com",
+    databaseURL: "https://whatscooking-cb33d.firebaseio.com",
+    projectId: "whatscooking-cb33d",
+    storageBucket: "whatscooking-cb33d.appspot.com",
+    messagingSenderId: "296059627382"
+};
+firebase.initializeApp(config);
+var database = firebase.database();
 
 $(document).ready(function() {
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyBnO_XnW5MaeETGle29pk5z7cyseXcWxJM",
-        authDomain: "whatscooking-cb33d.firebaseapp.com",
-        databaseURL: "https://whatscooking-cb33d.firebaseio.com",
-        projectId: "whatscooking-cb33d",
-        storageBucket: "whatscooking-cb33d.appspot.com",
-        messagingSenderId: "296059627382"
-    };
-    firebase.initializeApp(config);
 
-    var database = firebase.database();
     var addToPandorasPantry = [];
+    var addToMainPantryPage = [];
     var missingIngredients = [];
     var suppliedIngredients = [];
     var shoppingCartTrigger = false;
 
     $(".button-collapse").sideNav();
-
+    // function to make AJAX Call based on given ingredients
     function getData(query) {
+        // API URL
         var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&limitLicense=true&number=5&ranking=1&ingredients=" + query;
 
         $.ajax({
@@ -83,12 +88,15 @@ $(document).ready(function() {
         }).done(function(response) {
             //  console.log(response);
             for (var i = 0; i < response.length; i++) {
+                // call to get recipe details
                 getRecipe(response[i].id);
             }
         });
     }
 
+    // function to  make AJAX call with given recipe ID
     function getRecipe(recipeID) {
+        // API URL
         var queryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + recipeID + "/information";
 
         $.ajax({
@@ -98,14 +106,18 @@ $(document).ready(function() {
                 xhr.setRequestHeader("X-Mashape-Authorization", "Jn8goME99rmshWQrcQDNuZ9e7TN8p1FXY71jsnp6yW4jmAtQuu");
             }
         }).done(function(recipe) {
+            //  test to see if we get coking instructions
             if (recipe.instructions) {
                 //  console.log(recipe);
                 var recipeIngredients = [];
                 for (var i = 0; i < recipe.extendedIngredients.length; i++) {
                     recipeIngredients.push(recipe.extendedIngredients[i]);
                 }
+                //  call to create missing items
                 compareIngredients(recipeIngredients);
+                //  display recipe card
                 layoutRecipeCard(recipe);
+                // if we going to the shopping cart check the trigger if true
                 if (shoppingCartTrigger) {
                     shoppingCartTrigger = false;
                     $("#selected").hide()
@@ -115,12 +127,7 @@ $(document).ready(function() {
         });
     }
 
-    function testIngredients(supplied, required) {
-        if (required.search(supplied) >= 0) {
-            return true;
-        }
-    }
-
+    //  compare given items and require recipe items
     function compareIngredients(recipe) {
         missingIngredients = [];
         suppliedIngredients = [];
@@ -132,26 +139,29 @@ $(document).ready(function() {
         //  console.log("pantry: " + pantryItems);
         //  console.log("recipe: " + recipe);
         var foundIngredient = false;
-
+        // loops through each item in the recipe
         for (var i = 0; i < recipe.length; i++) {
-
+            // loops through each item in the pantry
             for (var j = 0; j < pantryItems.length; j++) {
-
+                // compares the food name is similar
                 if (recipe[i].name.toUpperCase().includes(pantryItems[j].toUpperCase())) {
                     //  console.log(recipe[i].name.toUpperCase());
                     //  console.log(pantryItems[j].toUpperCase());
+                    // compare food type is the same
                     if (recipe[i].aisle.toUpperCase() === pantryObj[pantryItems[j]].toUpperCase()) {
                         //  console.log(recipe[i].aisle.toUpperCase());
                         //  console.log(pantryObj[pantryItems[j]].toUpperCase());
+                        // set item to found
                         foundIngredient = true;
                         suppliedIngredients.push(recipe[i].name);
                     }
                 }
             }
+
+            // if item was found reset trigger
             if (foundIngredient) {
                 foundIngredient = false;
-            } else
-
+            } else // if item is not found add it to missing ingredients list
             {
                 if (missingIngredients.indexOf(recipe[i].name) < 0) {
                     missingIngredients.push(recipe[i].name);
@@ -161,6 +171,7 @@ $(document).ready(function() {
         //  console.log(missingIngredients);
     }
 
+    // creates the cards for each recipe
     function layoutRecipeCard(recipeData) {
         var parent = $("#recipeData");
         var cardParent = $("<div>");
@@ -205,6 +216,7 @@ $(document).ready(function() {
         $(parent).append(cardParent);
     }
 
+    // create the card for the shopping cart
     function layoutShoppingCard(recipeData) {
         var parent = $("#recipeData");
         var cardParent = $("<div>");
@@ -242,6 +254,7 @@ $(document).ready(function() {
         $(parent).append(cardParent);
     }
 
+    // create the layout of the pantry item
     function displayPantryItemsOnPage() {
         database.ref().on("value", function(snapshot) {
 
@@ -273,6 +286,7 @@ $(document).ready(function() {
         });
     }
 
+    // adding item to firebase pantry
     function goIntoPantry() {
         $(".addToPantryButton").hide();
         $("#removeFromPantry").hide();
@@ -288,7 +302,7 @@ $(document).ready(function() {
         database.ref().set({ pantry: newArray });
     }
 
-    //
+    // remove item from the firebase pantry
     function deleteFromPantry() {
         $(".addToPantryButton").hide();
         $("#removeFromPantry").hide();
@@ -313,9 +327,6 @@ $(document).ready(function() {
         displayPandorasPantry();
 
     }
-
-
-
 
     // This displays Pandora's pantry items on the left-hand side of the page.
     // Any item in the pantry will not be displayed on the storage section (right-hand side).
@@ -388,6 +399,7 @@ $(document).ready(function() {
         });
     }
 
+    // displays the pantry items based on food type
     function displayStorage(arr, newDiv, num) {
         arr = arr.sort();
         var parent = newDiv;
@@ -410,38 +422,37 @@ $(document).ready(function() {
         }
     }
 
+    // gets the select button from recipe to go to the shopping cart
     $("body").on("click", "#selected", function() {
         shoppingCartTrigger = true;
         $("#recipeData").empty();
         getRecipe($(this.parentElement).data("id"));
     });
-
+    // get the select button to go to the recipe page
     $("body").on("click", "#searchForRecipes", function() {
-        // write to local storage
+        // clear the local storage ingredients
         localStorage.removeItem("ingredients")
         var arrSelected = [];
+        // get all selected pantry items
         var selected = $("input[class^='pantryItemHere']:checked");
         for (var index = 0; index < selected.length; index++) {
             arrSelected.push(selected[index].name);
         }
+        // save item to local storage to the recipe page can grab items on load
         localStorage.setItem("ingredients", arrSelected.toString());
         window.location.href = "assets/html/recipe.html";
     });
 
+    // check if the recipe page is open and get the recipe data
     if (window.location.pathname.includes("recipe.html")) {
         getData(localStorage.getItem("ingredients"));
     }
 
+    // get the event to return to the results page
     $("body").on("click", "#returnResults", function() {
         $("#recipeData").empty();
         getData(localStorage.getItem("ingredients"));
     });
-
-    $(".searchDeleteButton").hide();
-    database = firebase.database();
-    var addToMainPantryPage = [];
-
-    displayPantryItemsOnPage();
 
     // This will display/hide the "Delete From Pantry" button if a pantry item is clicked/unclicked
     $(document).on("click", ".removingFromPantry", function() {
@@ -452,11 +463,12 @@ $(document).ready(function() {
         } else if ($(".removingFromPantry").is(":checked") === false) { $(".removeFromPantryButton").hide(); }
     });
 
+    // hiding \ revealing of buttons  based on selection
     $(document).on("click", ".pantryItemHere", function() {
         if ($(".pantryItemHere").is(":checked") === true) { $(".searchDeleteButton").show(); } else if ($(".pantryItemHere").is(":checked") === false) { $(".searchDeleteButton").hide(); }
     });
 
-    // This runs whenevr a box(es) is clicked and when they are unclicked
+    // This runs whenever a box(es) is clicked and when they are unclicked
     $(document).on("click", ".pantryItemClicked", function() {
         if ($(".pantryItemClicked").is(":checked") === true) {
             $(".addToPantryButton").show();
@@ -464,12 +476,6 @@ $(document).ready(function() {
             $(".removingFromPantry").prop("checked", false);
         } else if ($(".pantryItemClicked").is(":checked") === false) { $(".addToPantryButton").hide(); }
     });
-
-    $("#removeFromPantry").hide();
-
-    $(".addToPantryButton").hide();
-
-    displayPandorasPantry();
 
     // This runs when the user selects some items and presses the "Add to My Pantry" button.
     $("#addToMyPantry").on("click", function(event) {
@@ -482,5 +488,8 @@ $(document).ready(function() {
         event.preventDefault();
         deleteFromPantry();
     });
+
+    displayPantryItemsOnPage();
+    displayPandorasPantry();
 
 });
