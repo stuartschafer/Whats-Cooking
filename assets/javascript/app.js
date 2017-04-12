@@ -293,34 +293,29 @@ $(document).ready(function() {
         $(".addToPantryButton").hide();
         $("#removeFromPantry").hide();
         var removeArray = [];
-<<<<<<< HEAD
+
         var newIngred = [];
         var removeItems = $("input[id^='item']:checked");
 
-=======
-        var removeItems = $("input[id^='item']:checked");
-            
->>>>>>> efb50cdc9c43e804f5f636cf131792bce2b0e64c
         for (var i = 0; i < removeItems.length; i++) {
             removeArray.push(removeItems[i].name);
         }
 
         for (var j = addToPandorasPantry.length; j > -1; j--) {
-<<<<<<< HEAD
+
             if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} else { addToPandorasPantry.splice(j, 1); }
-=======
-            if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} 
-            else { addToPandorasPantry.splice(j,1); }
->>>>>>> efb50cdc9c43e804f5f636cf131792bce2b0e64c
+
+            if ($.inArray(addToPandorasPantry[j], removeArray) === -1) {} else { addToPandorasPantry.splice(j, 1); }
+
         }
         database.ref().set({ pantry: addToPandorasPantry });
         $("#pandorasPantryItems").empty();
         displayPandorasPantry();
-<<<<<<< HEAD
+
     }
-=======
-}
->>>>>>> efb50cdc9c43e804f5f636cf131792bce2b0e64c
+
+
+
 
     // This displays Pandora's pantry items on the left-hand side of the page.
     // Any item in the pantry will not be displayed on the storage section (right-hand side).
