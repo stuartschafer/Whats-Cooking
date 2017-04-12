@@ -11,7 +11,17 @@ label {
     color: #fff;
 }
 
+<<<<<<< HEAD
 [type="checkbox"]+label:before,
+=======
+img {
+    max-width: 320px;
+    max-height: 240px;
+    margin: auto;
+}
+
+[type="checkbox"]+label:before, 
+>>>>>>> efb50cdc9c43e804f5f636cf131792bce2b0e64c
 [type="checkbox"]:not(.filled-in)+label:after {
     border-color: #fff;
 }
@@ -30,6 +40,7 @@ label {
     height: 100%;
 }
 
+<<<<<<< HEAD
 .pantryItemClicked:checked+label:before {
     border-right: 2px solid blue;
     border-bottom: 2px solid blue;
@@ -59,6 +70,25 @@ label {
 .addToPantryButton:hover {
     background-color: yellow;
     color: green;
+=======
+.pantryItemClicked:checked + label:before {
+  border-right: 2px solid #26a69a;
+  border-bottom: 2px solid #26a69a; }
+
+.removingFromPantry:checked + label:before {
+  border-right: 2px solid darkred;
+  border-bottom: 2px solid darkred; }
+
+#removeFromPantry { 
+    background-color: darkred;
+    float: left;
+    padding: 0 .5rem; 
+}
+
+#removeFromPantry:hover {  
+    background-color: red;
+    color: #fff; 
+>>>>>>> efb50cdc9c43e804f5f636cf131792bce2b0e64c
 }
 
 .layout {
