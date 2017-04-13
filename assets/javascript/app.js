@@ -71,6 +71,8 @@ $(document).ready(function () {
     var addToMainPantryPage = [];
     var missingIngredients = [];
     var suppliedIngredients = [];
+    var selectedRecipeItems = [];
+    var pantryItemInRecipe = [];
     var shoppingCartTrigger = false;
 
     $(".button-collapse").sideNav();
@@ -131,6 +133,7 @@ $(document).ready(function () {
     function compareIngredients(recipe) {
         missingIngredients = [];
         suppliedIngredients = [];
+        selectedRecipeItems = [];
         database.ref().on("value", function (snapshot) {
             if (snapshot.child("pantry").exists()) {
                 pantryItems = snapshot.val().pantry;
@@ -147,6 +150,7 @@ $(document).ready(function () {
                 if (recipe[i].name.toUpperCase().includes(pantryItems[j].toUpperCase())) {
                     //  console.log(recipe[i].name.toUpperCase());
                     //  console.log(pantryItems[j].toUpperCase());
+
                     // compare food type is the same
                     if (recipe[i].aisle.toUpperCase() === pantryObj[pantryItems[j]].toUpperCase()) {
                         //  console.log(recipe[i].aisle.toUpperCase());
@@ -154,10 +158,17 @@ $(document).ready(function () {
                         // set item to found
                         foundIngredient = true;
                         suppliedIngredients.push(recipe[i].name);
+                        selectedRecipeItems.push(pantryItems[j]);
+
+
+                        
+                        
+                        
+                        
+
                     }
                 }
             }
-
             // if item was found reset trigger
             if (foundIngredient) {
                 foundIngredient = false;
@@ -246,7 +257,7 @@ $(document).ready(function () {
         $(cardContent).append(recipeData.instructions);
         var cardAction = $("<div>");
         $(cardAction).addClass("card-action");
-        $(cardAction).append('<a class="waves-effect waves-light btn-large" id="returnResults">Return to results</a>');
+        $(cardAction).append('<a class="waves-effect waves-light btn-large" id="returnResults">Return to results</a><a class="waves-effect waves-light btn-large" id="useRecipe">Use this recipe & remove items from Pantry</a>');
         $(cardAction).attr("data-id", recipeData.id);
         $(card).append(cardContent);
         $(card).append(cardAction);
@@ -431,14 +442,14 @@ $(document).ready(function () {
     // get the select button to go to the recipe page
     $("body").on("click", "#searchForRecipes", function () {
         // clear the local storage ingredients
-        localStorage.removeItem("ingredients")
+        localStorage.removeItem("ingredients");
         var arrSelected = [];
         // get all selected pantry items
         var selected = $("input[class^='pantryItemHere']:checked");
         for (var index = 0; index < selected.length; index++) {
             arrSelected.push(selected[index].name);
         }
-        // save item to local storage to the recipe page can grab items on load
+        // save item to local storage so the recipe page can grab items on load
         localStorage.setItem("ingredients", arrSelected.toString());
         window.location.href = "assets/html/recipe.html";
     });
@@ -492,4 +503,20 @@ $(document).ready(function () {
     displayPantryItemsOnPage();
     displayPandorasPantry();
 
+    // remove item from the firebase pantry (This is for the button on recipe.html when the user selects a recipe)
+    $("body").on("click", "#useRecipe", function (event) {
+        event.preventDefault();
+        $("#useRecipe").hide();
+        $("#returnResults").hide();
+       
+        for (var i = pantryItems.length; i > -1; i--) {
+            if ($.inArray(addToPandorasPantry[i], selectedRecipeItems) === -1) { 
+            } else { 
+                pantryItems.splice(i, 1);
+            } 
+        }
+        database.ref().set({ pantry: pantryItems });
+    });
+
 });
+

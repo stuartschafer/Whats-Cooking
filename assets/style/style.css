@@ -1,6 +1,7 @@
 body {
     font-family: 'Salsa', cursive;
     background-color: #617073;
+    margin-top: 75px;
 }
 
 h3 {
@@ -33,6 +34,10 @@ img {
 
 .nav-extended {
     background-color: #171A21;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
 
 .card {
@@ -87,4 +92,13 @@ img {
 
 .layout {
     height: 550px;
+}
+
+#useRecipe {
+    background-color: darkred;
+    font-size: 13px;
+}
+
+#useRecipe:hover {
+    background-color: maroon;
 }
