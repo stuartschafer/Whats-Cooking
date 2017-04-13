@@ -150,7 +150,6 @@ $(document).ready(function () {
                 if (recipe[i].name.toUpperCase().includes(pantryItems[j].toUpperCase())) {
                     //  console.log(recipe[i].name.toUpperCase());
                     //  console.log(pantryItems[j].toUpperCase());
-
                     // compare food type is the same
                     if (recipe[i].aisle.toUpperCase() === pantryObj[pantryItems[j]].toUpperCase()) {
                         //  console.log(recipe[i].aisle.toUpperCase());
@@ -159,13 +158,6 @@ $(document).ready(function () {
                         foundIngredient = true;
                         suppliedIngredients.push(recipe[i].name);
                         selectedRecipeItems.push(pantryItems[j]);
-
-
-                        
-                        
-                        
-                        
-
                     }
                 }
             }
